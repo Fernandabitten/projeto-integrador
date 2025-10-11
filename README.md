@@ -1,13 +1,16 @@
 # 🌄 Trilha Conectada – Aplicação para Trilheiros
 
 ## 👥 Equipe
-- Fernanda Barbosa Bittencourt  
+- Fernanda  
 - Grazi  
 - Ricardo  
 
 ---
 
 ## 🎯 Tema do Projeto
+**Trilha Conectada**
+
+## 📘 Descrição Geral
 **Trilha Conectada** é uma plataforma voltada para pessoas que praticam trilhas, permitindo **registrar rotas, avaliar percursos e compartilhar experiências** com outros trilheiros.  
 O objetivo é conectar aventureiros e ajudar na descoberta de novos caminhos, com informações sobre **nível de dificuldade, distância, localização e fotos** das trilhas.
 
