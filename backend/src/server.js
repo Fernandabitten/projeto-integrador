@@ -3,6 +3,7 @@ const app = express();
 const PORT = 3000;
 const cors = require('cors');
 const logger = require('./middlewares/logger');
+const trilhaRoutes = require('./src/routes/trailRoutes');
 
 // Middleware para permitir JSON no corpo das requisições
 app.use(express.json());
@@ -14,6 +15,9 @@ app.use(logger);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
+// Usa as rotas de trilhas
+app.use('/trilhas', trilhaRoutes);
 
 // Middleware de erro
 app.use((err, req, res, next) => {
