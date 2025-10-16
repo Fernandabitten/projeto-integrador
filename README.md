@@ -11,7 +11,7 @@
 **Trilha Conectada**
 
 ## 📘 Descrição Geral
-**Trilha Conectada** é uma plataforma voltada para pessoas que praticam trilhas, permitindo **registrar rotas, avaliar percursos e compartilhar experiências** com outros trilheiros.  
+**Trilha Conectada** é uma plataforma voltada para pessoas que praticam trilhas, permitindo **registrar rotas e compartilhar experiências**.  
 O objetivo é conectar aventureiros e ajudar na descoberta de novos caminhos, com informações sobre **nível de dificuldade, distância, localização e fotos** das trilhas.
 
 ---
@@ -22,7 +22,7 @@ O objetivo é conectar aventureiros e ajudar na descoberta de novos caminhos, co
 3. **Listar trilhas** (com filtros por cidade ou dificuldade).  
 4. **Upload de múltiplas fotos por trilha** (visualização em carrossel).  
 
-> *Futuras melhorias: mapa interativo, avaliações, favoritos, comentários e compartilhamento.*
+> *Futuras melhorias: mapa interativo.*
 
 ---
 
