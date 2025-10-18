@@ -3,7 +3,7 @@ const app = express();
 const PORT = 3000;
 const cors = require('cors');
 const logger = require('./middlewares/logger');
-const trilhaRoutes = require('./src/routes/trailRoutes');
+const trilhaRoutes = require('.routes/trailRoutes');
 
 // Middleware para permitir JSON no corpo das requisições
 app.use(express.json());
