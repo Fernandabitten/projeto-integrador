@@ -1,0 +1,247 @@
+/* ==============================
+   Importação de fontes e ícones
+================================= */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
+
+/* ==============================
+   Reset e configurações básicas
+================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  line-height: 1.6;
+  font-family: "Roboto Slab", serif;
+}
+
+/* Classe utilitária para acessibilidade */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==============================
+   Layout principal
+================================= */
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .main-content {
+    padding: 2rem;
+  }
+}
+
+/* ==============================
+   Cabeçalho e títulos
+================================= */
+.main-title {
+  font-weight: 700;
+  color: #474e42;
+  margin: 1rem 0 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .main-title {
+    margin: 0 0 3rem 1rem;
+    font-size: 3rem;
+  }
+}
+
+/* ==============================
+   Seção de filtros
+================================= */
+.filter-section {
+  background-color: #fcf2f2;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Remove a borda padrão do fieldset */
+.filter-form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Layout responsivo dos filtros */
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .filter-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Itens individuais do filtro */
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Rótulos dos filtros */
+.filter-label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+/* Campos de seleção */
+.filter-select {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #474e42;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  font-size: 1rem;
+  color: #474e42;
+  line-height: 1.2;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+/* Estilo ao focar */
+.filter-select:focus {
+  border-color: #94d333;
+  box-shadow: 0 0 0 4px rgba(148, 211, 51, 0.15);
+}
+
+/* ==============================
+   Lista de trilhas
+================================= */
+.trail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .trail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .trail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ==============================
+   Card de trilha
+================================= */
+.trail-card {
+  background-color: #fcf2f2;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.trail-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Imagem do card */
+.trail-image {
+  width: 100%;
+  height: 10rem;
+  object-fit: cover;
+}
+
+/* Conteúdo do card */
+.trail-content {
+  padding: 1rem;
+}
+
+/* Título da trilha */
+.trail-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+/* Localização */
+.trail-info {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  color: #474e42;
+  margin-bottom: 0.25rem;
+}
+
+/* Detalhes (dificuldade, distância etc.) */
+.trail-details {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  color: #474e42;
+  margin-bottom: 1rem;
+}
+
+/* Ícones */
+.icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+}
+
+.text-primary-light {
+  color: #60a5fa;
+}
+
+.text-orange {
+  color: #f97316;
+}
+
+.text-blue {
+  color: #3b82f6;
+}
+
+/* Botão do card */
+.card-button {
+  display: inline-block;
+  background-color: #fff7f7;
+  color: #9acd32;
+  border: 2px solid #9acd32;
+  border-radius: 30px;
+  padding: 8px 24px;
+  font-size: 1.125rem;
+  text-decoration: none;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card-button:hover {
+  background-color: #f6fff6;
+  color: #7fbf00;
+  border-color: #7fbf00;
+}
