@@ -1,0 +1,28 @@
+{
+  "name": "projeto-integrador",
+  "version": "1.0.0",
+  "description": "- Fernanda  \r - Grazi  \r - Ricardo",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "concurrently -n \"BACK,FRONT\" -c \"yellow,cyan\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fernandabitten/projeto-integrador.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Fernandabitten/projeto-integrador/issues"
+  },
+  "homepage": "https://github.com/Fernandabitten/projeto-integrador#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
