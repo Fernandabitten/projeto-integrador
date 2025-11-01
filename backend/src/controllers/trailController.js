@@ -9,6 +9,7 @@ const trails = [
     description:
       "Trilha com vista panorâmica, ideal para quem busca aventura e belas paisagens.",
     difficulty: "Moderado",
+    Distance: 4.5,
     filePath: "/uploads/gpx/pedra-rajada.gpx",
     createdAt: new Date("2025-04-01T08:00:00Z"),
     updatedAt: new Date("2025-04-10T09:30:00Z"),
@@ -46,6 +47,7 @@ const trails = [
     description:
       "Trilha urbana leve com vegetação nativa e acesso facilitado, ideal para iniciantes.",
     difficulty: "Fácil",
+    distance: 8.0,
     filePath: "/uploads/gpx/coco-trilha.gpx",
     createdAt: new Date("2025-04-05T10:00:00Z"),
     updatedAt: new Date("2025-04-08T12:00:00Z"),
@@ -76,6 +78,7 @@ const trails = [
     description:
       "Trilha desafiadora com subidas intensas e mirantes incríveis, ideal para praticantes experientes.",
     difficulty: "Difícil",
+    distance: 5.0,
     filePath: "/uploads/gpx/esperanca-trilha.gpx",
     createdAt: new Date("2025-05-02T08:00:00Z"),
     updatedAt: new Date("2025-05-05T10:15:00Z"),
