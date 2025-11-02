@@ -9,7 +9,7 @@ const trails = [
     description:
       "Trilha com vista panorâmica, ideal para quem busca aventura e belas paisagens.",
     difficulty: "Moderado",
-    Distance: 4.5,
+    distance: 4.5,
     filePath: "/uploads/gpx/pedra-rajada.gpx",
     createdAt: new Date("2025-04-01T08:00:00Z"),
     updatedAt: new Date("2025-04-10T09:30:00Z"),
@@ -109,7 +109,6 @@ const trails = [
     }
   }
 ];
-
 
 // Função para listar todas as trails!
 exports.listartrails = (req, res) => {
