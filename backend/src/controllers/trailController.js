@@ -111,7 +111,7 @@ const trails = [
 ];
 
 
-// Função para listar todas as trails
+// Função para listar todas as trails!
 exports.listartrails = (req, res) => {
   res.json(trails);
 };
