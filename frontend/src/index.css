@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  /* Fonte Padrão */
+  --font-sans: 'Roboto', sans-serif;
+
+  /* Cores de Marca Única */
+  --color-primary: #94d333; /*cor de destaque principal */
+  --color-bg: #2b3c35; /*cor de fundo */
+  --color-bg-2: #fcf2f2; /*cor de fundo card's, filtros*/
+  --color-bg-input-1: #474e42; /* cor de fundo em estado normal */
+  --color-text: #474e42; /*cor dos textos */
+  --color-text-secundary: #948f99;
+  --color-hover: #2f5a4a;
+}

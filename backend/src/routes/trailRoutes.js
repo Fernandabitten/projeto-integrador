@@ -5,6 +5,6 @@ const trilhaController = require('../controllers/trailController'); // Importa o
 
 
 // Rota GET /trilhas → chama a função listarTrilhas do controller
-router.get('/', trilhaController.listarTrilhas);
+router.get('/', trailController.listTrails);
 
 module.exports = router; // Exporta o router
