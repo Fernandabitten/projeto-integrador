@@ -10,38 +10,36 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="flex">
-      <aside
-        className={`
+    <aside
+      className={`
         bg-bg h-screen p-0 flex flex-col transition-all duration-300 ease-in-out
         fixed md:static z-40 w-20 md:w-64
       `}
-      >
-        <div>
-          <img src={logo} alt="Logo Trilha Conectada" className="w-32 h-auto" />
-        </div>
-        <nav className="flex-1 space-y-2 text-2xl">
-          {navItems.map(item => {
-            const isActive = location.pathname === item.key;
-            return (
-              <Link
-                key={item.key}
-                to={item.key}
-                className={`flex items-center w-full p-2 font-medium transition duration-150
+    >
+      <div>
+        <img src={logo} alt="Logo Trilha Conectada" className="w-32 h-auto" />
+      </div>
+      <nav className="flex-1 space-y-2 text-2xl">
+        {navItems.map(item => {
+          const isActive = location.pathname === item.key;
+          return (
+            <Link
+              key={item.key}
+              to={item.key}
+              className={`flex items-center w-full p-2 font-medium transition duration-150
                     ${
                       isActive
                         ? 'bg-[#6B726E] text-primary border-l-4 border-primary'
-                        : 'text-text-secundary hover:bg-hover'
+                        : 'text-text-secundary hover:bg-primary'
                     }`}
-              >
-                {item.icon}
-                <span className="hidden md:inline ml-1">{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
-    </div>
+            >
+              {item.icon}
+              <span className="hidden md:inline ml-1">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
   );
 };
 

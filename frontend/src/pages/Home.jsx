@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getJSON } from '../services/api';
+import TrailCard from '../components/TrailCard';
 
 const Home = () => {
   const [data, setData] = useState(null);
@@ -56,18 +57,20 @@ const Home = () => {
         <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-2">Trilhas</h1>
         <hr className="border-t border-text/50 mb-6" />
       </div>
-      {/* Código teste apagar quando implementar filtros e cards */}
-      {data ? (
-        <div className="bg-gray-100 p-4 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-2">Dados Recebidos:</h2>
-          <pre className="whitespace-pre-wrap break-words text-sm">
-            {/* Exibe o objeto JSON formatado para visualização */}
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </div>
-      ) : (
-        <p>Nenhum dado recebido.</p>
-      )}
+      <div
+        className="
+        grid 
+        gap-8 
+        justify-center
+        sm:grid-cols-1 
+        md:grid-cols-2 
+        lg:grid-cols-3
+      "
+      >
+        {data?.map(t => (
+          <TrailCard key={t.id} trail={t} />
+        ))}
+      </div>
     </div>
   );
 };
