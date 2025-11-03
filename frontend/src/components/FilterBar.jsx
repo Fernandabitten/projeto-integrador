@@ -46,7 +46,7 @@ const FilterBar = ({trails, onFilterChange, filters}) => {
           id="state"
           name="state"
           onChange={handleChange}
-          className="border border-gray-300 rounded-lg p-2"
+          className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
         >
           <option value="todas">Todos os estados</option>
           {states.map(uf => (
@@ -66,7 +66,7 @@ const FilterBar = ({trails, onFilterChange, filters}) => {
           id="city"
           name="city"
           onChange={handleChange}
-          className="border border-gray-300 rounded-lg p-2"
+          className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
         >
           <option value="todas">Todas as cidades</option>
           {cities.map(city => (
@@ -86,7 +86,7 @@ const FilterBar = ({trails, onFilterChange, filters}) => {
           id="difficulty"
           name="difficulty"
           onChange={handleChange}
-          className="border border-gray-300 rounded-lg p-2"
+          className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
         >
           <option value="todas">Todas</option>
           {difficulties.map(dif => (
