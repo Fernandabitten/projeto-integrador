@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { getJSON } from '../services/api';
 import TrailCard from '../components/TrailCard';
+import FilterBar from '../components/FilterBar';
 
 const Home = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    state: 'todas',
+    city: 'todas',
+    difficulty: 'todas',
+  });
 
   useEffect(() => {
     const API_ROUTE = '/trilhas';
@@ -35,6 +42,33 @@ const Home = () => {
     fetchData();
   }, []); // O array vazio assegura que a função roda apenas uma vez, na montagem
 
+  // Quando filtros mudam
+  useEffect(() => {
+    let filteredData = [...data];
+
+    if (filters.state !== 'todas') {
+      filteredData = filteredData.filter(
+        t => t.state.trim().toLowerCase() === filters.state.trim().toLowerCase()
+      );
+    }
+
+    if (filters.city !== 'todas') {
+      filteredData = filteredData.filter(
+        t => t.city.trim().toLowerCase() === filters.city.trim().toLowerCase()
+      );
+    }
+
+    if (filters.difficulty !== 'todas') {
+      filteredData = filteredData.filter(
+        t => t.difficulty.trim().toLowerCase() === filters.difficulty.trim().toLowerCase()
+      );
+    }
+
+    console.log('Filtros ativos:', filters);
+    console.log('Resultado filtrado:', filteredData);
+    setFiltered(filteredData);
+  }, [filters, data]);
+
   // --- Renderização do Componente ---
 
   if (loading) {
@@ -57,6 +91,8 @@ const Home = () => {
         <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-2">Trilhas</h1>
         <hr className="border-t border-text/50 mb-6" />
       </div>
+      {/* ✅ Filtros dinâmicos */}
+      <FilterBar trails={data} onFilterChange={setFilters} filters={filters} />
       <div
         className="
         grid 
@@ -67,9 +103,13 @@ const Home = () => {
         lg:grid-cols-3
       "
       >
-        {data?.map(t => (
-          <TrailCard key={t.id} trail={t} />
-        ))}
+        {filtered.length > 0 ? (
+          filtered.map(t => <TrailCard key={t.id} trail={t} />)
+        ) : (
+          <div className="col-span-full text-center text-gray-500">
+            Nenhuma trilha encontrada com os filtros selecionados.
+          </div>
+        )}
       </div>
     </div>
   );
