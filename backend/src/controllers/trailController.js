@@ -2,6 +2,44 @@
 
 const trails = [
   {
+    id: "t1-uuid-051",
+    name: "Trilha da Pedra da Rajada",
+    state: "São Paulo",
+    city: "Campinas",
+    description:
+      "Trilha com vista panorâmica, ideal para quem busca aventura e belas paisagens.",
+    difficulty: "Moderado",
+    distance: 4.5,
+    filePath: "/uploads/gpx/pedra-rajada.gpx",
+    createdAt: new Date("2025-04-01T08:00:00Z"),
+    updatedAt: new Date("2025-04-10T09:30:00Z"),
+    userId: "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78",
+    photos: [
+      {
+        id: "p1-uuid-001",
+        url: "https://picsum.photos/seed/rajada1/400/300",
+        path: "/uploads/photos/rajada1.jpg",
+        trailId: "t1-uuid-001",
+        createdAt: new Date("2025-04-01T08:30:00Z"),
+      },
+      {
+        id: "p1-uuid-002",
+        url: "https://picsum.photos/seed/rajada2/400/300",
+        path: "/uploads/photos/rajada2.jpg",
+        trailId: "t1-uuid-001",
+        createdAt: new Date("2025-04-01T08:45:00Z"),
+      },
+    ],
+    file: {
+      id: "f1-uuid-001",
+      path: "/uploads/files/rajada-mapa.gpx",
+      type: "application/gpx+xml",
+      url: "https://meuapp.com/files/rajada-mapa.gpx",
+      trailId: "t1-uuid-001",
+      createdAt: new Date("2025-04-01T09:00:00Z"),
+    },
+  },
+  {
     id: "t1-uuid-001",
     name: "Trilha da Pedra da Rajada",
     state: "Ceará",

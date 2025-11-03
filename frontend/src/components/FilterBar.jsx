@@ -1,80 +1,103 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
+const FilterBar = ({trails, onFilterChange, filters}) => {
 
-const statesAndCities = {
-  Ceará: ['Fortaleza', 'Sobral', 'Juazeiro do Norte'],
-  Bahia: ['Salvador', 'Feira de Santana', 'Vitória da Conquista'],
-  Pernambuco: ['Recife', 'Olinda', 'Caruaru'],
+  
+  const states = useMemo(() => {
+    return [...new Set(trails.map(t => t.state).filter(Boolean))];
+  }, [trails]);
+
+    const cities = useMemo(() => {
+    // Pega o estado atualmente selecionado. Se for "todas", usa null ou undefined.
+    const selectedState = filters.state && filters.state !== 'todas' ? filters.state : null;
+
+    let filteredTrails = trails;
+
+    // Se um estado específico foi selecionado, filtra as trilhas apenas para esse estado
+    if (selectedState) {
+      filteredTrails = trails.filter(t => t.state === selectedState);
+    }
+
+    // Retorna a lista única de cidades, baseada nas trilhas filtradas
+    return [...new Set(filteredTrails.map(t => t.city).filter(Boolean))];
+  }, [trails, filters.state]); // <--- CHAVE: Dependência agora inclui filters.state
+
+  const difficulties = ['Fácil', 'Moderado', 'Difícil'];
+
+  const handleChange = e => {
+  const { name, value } = e.target;
+
+  onFilterChange(prev => {
+    // Se o usuário mudou o estado, resetar a cidade para "todas"
+    if (name === 'state') {
+      return { ...prev, state: value, city: 'todas' };
+    }
+    return { ...prev, [name]: value };
+  });
 };
 
-const dificulties = ['Fácil', 'Média', 'Difícil'];
-
-export default function Filters() {
-  const [state, setState] = useState('Ceará');
-  const [city, setCity] = useState('Todas as cidades');
-  const [dificulty, setDificulty] = useState('Todas');
-  const [AvailableCities, setAvailableCities] = useState(statesAndCities[state]);
-
-  useEffect(() => {
-    setAvailableCities(statesAndCities[state]);
-    setCity('Todas as cidades');
-  }, [state]);
-
-  const handleFiltro = () => {
-    console.log({
-      state,
-      city,
-      dificulty
-    });
-  };
-
   return (
-    <div style={{
-      display: 'flex',
-      gap: '1rem',
-      backgroundColor: '#fff6f6',
-      padding: '10px 15px',
-      borderRadius: '6px',
-      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-      alignItems: 'center'
-    }}>
-      <div>
-        <label>Estado:</label><br />
-        <select value={state} onChange={e => setState(e.target.value)}>
-          {Object.keys(statesAndCities).map((uf) => (
-            <option key={uf} value={uf}>{uf}</option>
+    <fieldset className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-2xl shadow-sm border border-gray-200 mb-6">
+      {/* Estado */}
+      <div className="flex flex-col">
+        <label htmlFor="state" className="text-sm font-semibold mb-1">
+          Estado:
+        </label>
+        <select
+          id="state"
+          name="state"
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg p-2"
+        >
+          <option value="todas">Todos os estados</option>
+          {states.map(uf => (
+            <option key={uf} value={uf}>
+              {uf}
+            </option>
           ))}
         </select>
       </div>
 
-      <div>
-        <label>Cidade:</label><br />
-        <select value={city} onChange={e => setCity(e.target.value)}>
-          <option>Todas as cidades</option>
-          {AvailableCities.map((c) => (
-            <option key={c} value={c}>{c}</option>
+      {/* Cidade */}
+      <div className="flex flex-col">
+        <label htmlFor="city" className="text-sm font-semibold mb-1">
+          Cidade:
+        </label>
+        <select
+          id="city"
+          name="city"
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg p-2"
+        >
+          <option value="todas">Todas as cidades</option>
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city}
+            </option>
           ))}
         </select>
       </div>
 
-      <div>
-        <label>Dificuldade:</label><br />
-        <select value={dificulty} onChange={e => setDificulty(e.target.value)}>
-          <option>Todas</option>
-          {dificulties.map((dif) => (
-            <option key={dif} value={dif}>{dif}</option>
+      {/* Dificuldade */}
+      <div className="flex flex-col">
+        <label htmlFor="difficulty" className="text-sm font-semibold mb-1">
+          Dificuldade:
+        </label>
+        <select
+          id="difficulty"
+          name="difficulty"
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg p-2"
+        >
+          <option value="todas">Todas</option>
+          {difficulties.map(dif => (
+            <option key={dif} value={dif}>
+              {dif}
+            </option>
           ))}
         </select>
       </div>
-
-      <button onClick={handleFiltro} style={{
-        padding: '6px 12px',
-        borderRadius: '4px',
-        backgroundColor: '#f0b3b3',
-        border: 'none',
-        cursor: 'pointer'
-      }}>
-        Filtrar
-      </button>
-    </div>
+    </fieldset>
   );
 }
+
+export default FilterBar;
