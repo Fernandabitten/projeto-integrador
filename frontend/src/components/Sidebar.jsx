@@ -5,7 +5,7 @@ import logo from '../assets/logo.svg';
 const Sidebar = () => {
   const location = useLocation();
   const navItems = [
-    { key: '/', label: 'Trilhas', icon: <Home size={22} /> },
+    { key: '/home', label: 'Trilhas', icon: <Home size={22} /> },
     { key: '/minhas-trilhas', label: 'Minhas Trilhas', icon: <Star size={22} /> },
   ];
 
