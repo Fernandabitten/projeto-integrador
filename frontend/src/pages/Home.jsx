@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { getJSON } from '../services/api';
 import TrailCard from '../components/TrailCard';
 import FilterBar from '../components/FilterBar';
+import TrailDetailsModal from '../components/TrailDetailsModal';
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedTrail, setSelectedTrail] = useState(null);
   const [filters, setFilters] = useState({
     state: 'todas',
     city: 'todas',
@@ -93,8 +95,8 @@ const Home = () => {
       </div>
       {/* ✅ Filtros dinâmicos */}
       <FilterBar trails={data} onFilterChange={setFilters} filters={filters} />
-      <div
-        className="
+    <div
+      className="
         grid 
         gap-8 
         justify-center
@@ -102,17 +104,29 @@ const Home = () => {
         md:grid-cols-2 
         lg:grid-cols-3
       "
-      >
-        {filtered.length > 0 ? (
-          filtered.map(t => <TrailCard key={t.id} trail={t} />)
-        ) : (
-          <div className="col-span-full text-center text-gray-500">
-            Nenhuma trilha encontrada com os filtros selecionados.
-          </div>
-        )}
-      </div>
+    >
+      {filtered.length > 0 ? (
+        filtered.map(t => (
+          <TrailCard 
+            key={t.id} 
+            trail={t}
+            onClickDetails={() => setSelectedTrail(t)}   // ✅ Agora abre o modal
+          />
+        ))
+      ) : (
+        <div className="col-span-full text-center text-gray-500">
+          Nenhuma trilha encontrada com os filtros selecionados.
+        </div>
+      )}
     </div>
-  );
-};
+
+    {/* ✅ Modal conectado */}
+    <TrailDetailsModal 
+      trail={selectedTrail}
+      onClose={() => setSelectedTrail(null)}
+    />
+        </div>
+      );
+    };
 
 export default Home;
