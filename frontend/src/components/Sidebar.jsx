@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Star, LogOut } from 'lucide-react';
+import { Home, Star, LogOut, BadgeInfo } from 'lucide-react';
 import logo from '../assets/logo.svg';
 
 const Sidebar = () => {
@@ -7,6 +7,7 @@ const Sidebar = () => {
   const navItems = [
     { key: '/', label: 'Trilhas', icon: <Home size={22} /> },
     { key: '/minhas-trilhas', label: 'Minhas Trilhas', icon: <Star size={22} /> },
+    { key: '/sobre', label: 'Sobre', icon: <BadgeInfo size={22} /> },
   ];
 
   return (
