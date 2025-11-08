@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { getJSON } from '../services/api';
 import TrailCard from '../components/TrailCard';
 import FilterBar from '../components/FilterBar';
+import AvatarMenu from '../components/AvatarMenu';
 
-const Home = () => {
+const Home = ({ handleLogout }) => {
   const [data, setData] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,8 +65,6 @@ const Home = () => {
       );
     }
 
-    console.log('Filtros ativos:', filters);
-    console.log('Resultado filtrado:', filteredData);
     setFiltered(filteredData);
   }, [filters, data]);
 
@@ -87,10 +86,11 @@ const Home = () => {
   }
   return (
     <div className="flex-1 ml-15 md:ml-0 md:pt-0 pt-0 p-2">
-      <div className="flex flex-col">
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-2">Trilhas</h1>
-        <hr className="border-t border-text/50 mb-6" />
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold">Trilhas</h1>
+        <AvatarMenu handleLogout={handleLogout} />
       </div>
+      <hr className="border-t border-text/50 mb-6" />
       {/* ✅ Filtros dinâmicos */}
       <FilterBar trails={data} onFilterChange={setFilters} filters={filters} />
       <div

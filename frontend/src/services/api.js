@@ -1,5 +1,4 @@
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-// const API = 'http://localhost:3000';
 
 /**
  * Função auxiliar genérica para lidar com requisições e erros
@@ -10,32 +9,33 @@ async function request(url, options = {}) {
 
     // Intercepta erros HTTP (como 401, 404, 500)
     if (!res.ok) {
-      // Tenta ler o corpo da resposta (se vier mensagem de erro da API)
-      let errorMessage = 'Erro desconhecido';
+      let errorMessage = `Erro ${res.status}`;
+
       try {
-        const data = await res.json();
-        errorMessage = data.message || data.error || res.statusText;
+        // Tenta ler a mensagem JSON vinda do backend
+        const errorData = await res.json();
+        errorMessage = errorData.message || errorMessage;
       } catch {
-        errorMessage = res.statusText;
+        // Caso o backend não mande JSON
+        errorMessage = res.statusText || errorMessage;
       }
 
       // Caso o status seja 401 → sessão expirada / não autorizado
       if (res.status === 401) {
-        console.warn('⚠️ Sessão expirada. Faça login novamente.');
+        console.warn('⚠️ Sessão expirada ou login inválido.');
         // TODO:
         // - Redirecionar para /login
         // - Apagar o token salvo no localStorage
       }
-
-      // Lança erro para ser tratado onde a função for chamada
-      throw new Error(`Erro ${res.status}: ${errorMessage}`);
+      // Lança sempre um Error com a mensagem correta
+      throw new Error(errorMessage);
     }
 
     // Se tudo deu certo, retorna o JSON
     return res.json();
   } catch (err) {
     console.error('Erro na requisição:', err.message);
-    throw err; // repassa o erro para o componente que chamou
+    throw err; // repassa o erro para o App.jsx
   }
 }
 
