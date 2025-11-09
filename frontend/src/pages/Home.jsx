@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getJSON } from '../services/api';
 import TrailCard from '../components/TrailCard';
 import FilterBar from '../components/FilterBar';
+import TrailDetailsModal from '../components/TrailDetailsModal';
 import AvatarMenu from '../components/AvatarMenu';
 
 const Home = ({ handleLogout }) => {
@@ -9,6 +10,7 @@ const Home = ({ handleLogout }) => {
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedTrail, setSelectedTrail] = useState(null);
   const [filters, setFilters] = useState({
     state: 'todas',
     city: 'todas',
@@ -104,13 +106,22 @@ const Home = ({ handleLogout }) => {
       "
       >
         {filtered.length > 0 ? (
-          filtered.map(t => <TrailCard key={t.id} trail={t} />)
+          filtered.map(t => (
+            <TrailCard
+              key={t.id}
+              trail={t}
+              onClickDetails={() => setSelectedTrail(t)} // ✅ Agora abre o modal
+            />
+          ))
         ) : (
           <div className="col-span-full text-center text-gray-500">
             Nenhuma trilha encontrada com os filtros selecionados.
           </div>
         )}
       </div>
+
+      {/* ✅ Modal conectado */}
+      <TrailDetailsModal trail={selectedTrail} onClose={() => setSelectedTrail(null)} />
     </div>
   );
 };

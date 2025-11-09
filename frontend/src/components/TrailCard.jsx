@@ -1,8 +1,7 @@
 import React from 'react';
 import { MapPin, Mountain, Ruler } from 'lucide-react';
 
-export default function TrailCard({ trail }) {
-  // Se não existir ou vier sem os campos essenciais, não renderiza o card
+export default function TrailCard({ trail, onClickDetails }) {
   if (
     !trail ||
     !trail.name ||
@@ -38,7 +37,11 @@ export default function TrailCard({ trail }) {
           </div>
         </div>
 
-        <button className="mt-4 w-full py-2 text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition">
+        {/* ✅ Botão que dispara o modal */}
+        <button
+          onClick={onClickDetails}
+          className="mt-4 w-full py-2 text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition"
+        >
           Ver Detalhes
         </button>
       </div>
