@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react';
-const FilterBar = ({trails, onFilterChange, filters}) => {
-
-  
+const FilterBar = ({ trails, onFilterChange, filters }) => {
   const states = useMemo(() => {
     return [...new Set(trails.map(t => t.state).filter(Boolean))];
   }, [trails]);
 
-    const cities = useMemo(() => {
+  const cities = useMemo(() => {
     // Pega o estado atualmente selecionado. Se for "todas", usa null ou undefined.
     const selectedState = filters.state && filters.state !== 'todas' ? filters.state : null;
 
@@ -24,16 +22,16 @@ const FilterBar = ({trails, onFilterChange, filters}) => {
   const difficulties = ['Fácil', 'Moderado', 'Difícil'];
 
   const handleChange = e => {
-  const { name, value } = e.target;
+    const { name, value } = e.target;
 
-  onFilterChange(prev => {
-    // Se o usuário mudou o estado, resetar a cidade para "todas"
-    if (name === 'state') {
-      return { ...prev, state: value, city: 'todas' };
-    }
-    return { ...prev, [name]: value };
-  });
-};
+    onFilterChange(prev => {
+      // Se o usuário mudou o estado, resetar a cidade para "todas"
+      if (name === 'state') {
+        return { ...prev, state: value, city: 'todas' };
+      }
+      return { ...prev, [name]: value };
+    });
+  };
 
   return (
     <fieldset className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-2xl shadow-sm border border-gray-200 mb-6">
@@ -98,6 +96,6 @@ const FilterBar = ({trails, onFilterChange, filters}) => {
       </div>
     </fieldset>
   );
-}
+};
 
 export default FilterBar;
