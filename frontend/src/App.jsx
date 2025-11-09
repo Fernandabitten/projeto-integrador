@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import MyTrails from './pages/MyTrails';
 import About from './pages/About';
+import TrailFormModal from './components/TrailFormModal';
 import AuthForm from './components/AuthForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import { postJSON } from './services/api';
@@ -106,6 +107,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Rota /minhas-trilhas com rotas aninhadas */}
           <Route
             path="/minhas-trilhas"
             element={
@@ -113,7 +115,10 @@ function App() {
                 <MyTrails handleLogout={handleLogout} />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="new" element={<TrailFormModal />} />
+          </Route>
+
           <Route
             path="/sobre"
             element={

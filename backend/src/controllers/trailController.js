@@ -152,3 +152,16 @@ const trails = [
 exports.listTrails = (req, res) => {
   res.json(trails);
 };
+
+// Adiciona nova trilha
+exports.createTrail = (req, res) => {
+  const newTrail = {
+    id: `t${Date.now()}`,
+    ...req.body,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  trails.push(newTrail);
+  res.status(201).json(newTrail);
+};
