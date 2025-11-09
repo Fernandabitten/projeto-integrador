@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import MyTrails from './pages/MyTrails';
+import About from './pages/About';
 import AuthForm from './components/AuthForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import { postJSON } from './services/api';
@@ -110,6 +111,14 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <MyTrails handleLogout={handleLogout} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sobre"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <About />
               </ProtectedRoute>
             }
           />
