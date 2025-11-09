@@ -8,6 +8,7 @@ import About from './pages/About';
 import AuthForm from './components/AuthForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import { postJSON } from './services/api';
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const location = useLocation();
@@ -125,7 +126,10 @@ function App() {
           {/* Página não encontrada → redireciona para login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
+        
       </main>
+      
+      <ScrollToTop />
     </div>
   );
 }
