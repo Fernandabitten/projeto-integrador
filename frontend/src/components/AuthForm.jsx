@@ -105,5 +105,4 @@ const AuthForm = ({ mode, navigate, onAuth }) => {
   );
 };
 
->>>>>>> main
 export default AuthForm;
