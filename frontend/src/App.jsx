@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Sidebar from './components/Sidebar';
@@ -8,8 +8,10 @@ import About from './pages/About';
 import AuthForm from './components/AuthForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import { postJSON } from './services/api';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
+  const mainRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -82,6 +84,7 @@ function App() {
 
       {/* main ocupa a tela toda em /login */}
       <main
+        ref={mainRef}
         className={`flex-1 overflow-y-auto bg-gray-50 ${
           shouldHideSidebar ? 'w-full h-full' : 'p-4'
         }`}
@@ -126,6 +129,8 @@ function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
+
+      <ScrollToTop scrollRef={mainRef} />
     </div>
   );
 }
