@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { registerUser, login } from './services/authService';
 import toast from 'react-hot-toast';
 import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import MyTrails from './pages/MyTrails';
 import About from './pages/About';
-import AuthForm from './components/AuthForm';
 import ProtectedRoute from './components/ProtectedRoute';
-import { postJSON } from './services/api';
+import AuthForm from './components/AuthForm';
+import TrailFormModal from './components/TrailFormModal';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -51,11 +52,11 @@ function App() {
   const handleAuth = async (data, mode) => {
     try {
       if (mode === 'register') {
-        await postJSON('/auth/register', data);
+        await registerUser(data);
         toast.success(`Usuário ${data.name} cadastrado com sucesso!`);
         navigate('/login');
       } else {
-        const res = await postJSON('/auth/login', data);
+        const res = await login(data);
         // TODO: refatorar com token do usuario quando implementar no Back
         setUser(res.user);
         setIsAuthenticated(true);
@@ -109,6 +110,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Rota /minhas-trilhas com rotas aninhadas */}
           <Route
             path="/minhas-trilhas"
             element={
@@ -116,7 +118,10 @@ function App() {
                 <MyTrails handleLogout={handleLogout} />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="new" element={<TrailFormModal />} />
+          </Route>
+
           <Route
             path="/sobre"
             element={

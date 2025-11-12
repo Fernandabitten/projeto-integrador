@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getJSON } from '../services/api';
+// import { getJSON } from '../services/api';
+import { fetchTrails } from '../services/trailsService';
 import TrailCard from '../components/TrailCard';
 import FilterBar from '../components/FilterBar';
 import TrailDetailsModal from '../components/TrailDetailsModal';
@@ -18,8 +19,6 @@ const Home = ({ handleLogout }) => {
   });
 
   useEffect(() => {
-    const API_ROUTE = '/trilhas';
-
     // TODO: Adicionar um token se a rota exigir autenticação
     // const authToken = localStorage.getItem('token');
 
@@ -28,9 +27,7 @@ const Home = ({ handleLogout }) => {
         setLoading(true);
         setError(null);
 
-        // Chamar a função getJSON
-        // TODO: se precisar de autenticação: await getJSON(API_ROUTE, authToken);
-        const result = await getJSON(API_ROUTE);
+        const result = await fetchTrails();
 
         setData(result);
       } catch (err) {
@@ -81,7 +78,7 @@ const Home = ({ handleLogout }) => {
       <div className="p-8 text-red-600 border border-red-300 bg-red-50 rounded-lg">
         Erro ao carregar: **{error}**
         <p className="mt-2 text-sm text-red-500">
-          Verifique se sua API ({API_ROUTE}) está rodando e respondendo.
+          Verifique se sua API está rodando e respondendo.
         </p>
       </div>
     );

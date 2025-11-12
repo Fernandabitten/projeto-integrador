@@ -1,5 +1,29 @@
-import React, { useMemo } from 'react';
-const FilterBar = ({ trails, onFilterChange, filters }) => {
+import React, { useState, useMemo } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import TrailFormModal from './TrailFormModal';
+
+const FilterBar = ({ trails, onFilterChange, filters, onTrailAdded }) => {
+  const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleTrailSubmit = async (newTrailData, mode) => {
+    if (mode === 'create') {
+      toast.success('Trilha cadastrada com sucesso!');
+    } else if (mode === 'edit') {
+      toast.success('Trilha atualizada com sucesso!');
+    }
+
+    setShowForm(false);
+
+    // Atualiza a lista de trilhas na página pai
+    if (typeof onTrailAdded === 'function') {
+      await onTrailAdded();
+    }
+    navigate('/minhas-trilhas');
+  };
+
   const states = useMemo(() => {
     return [...new Set(trails.map(t => t.state).filter(Boolean))];
   }, [trails]);
@@ -32,6 +56,9 @@ const FilterBar = ({ trails, onFilterChange, filters }) => {
       return { ...prev, [name]: value };
     });
   };
+
+  // verifica se a rota atual é /minhas-trilhas
+  const isMyTrailsPage = location.pathname === '/minhas-trilhas';
 
   return (
     <fieldset className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-2xl shadow-sm border border-gray-200 mb-6">
@@ -76,24 +103,47 @@ const FilterBar = ({ trails, onFilterChange, filters }) => {
       </div>
 
       {/* Dificuldade */}
-      <div className="flex flex-col">
-        <label htmlFor="difficulty" className="text-sm font-semibold mb-1">
-          Dificuldade:
-        </label>
-        <select
-          id="difficulty"
-          name="difficulty"
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-          <option value="todas">Todas</option>
-          {difficulties.map(dif => (
-            <option key={dif} value={dif}>
-              {dif}
-            </option>
-          ))}
-        </select>
+      <div className="flex flex-col md:flex-row md:items-end md:gap-3">
+        <div className="flex flex-col flex-1">
+          <label htmlFor="difficulty" className="text-sm font-semibold mb-1">
+            Dificuldade:
+          </label>
+          <select
+            id="difficulty"
+            name="difficulty"
+            onChange={handleChange}
+            className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+          >
+            <option value="todas">Todas</option>
+            {difficulties.map(dif => (
+              <option key={dif} value={dif}>
+                {dif}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {isMyTrailsPage && (
+          <NavLink to="new">
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="bg-lime-500 hover:bg-lime-600 text-white font-semibold py-2 px-4 rounded-lg transition mt-3 md:mt-0"
+            >
+              Cadastrar trilha
+            </button>
+          </NavLink>
+        )}
       </div>
+
+      {showForm && (
+        <TrailFormModal
+          mode={'create'}
+          onClose={() => setShowForm(false)}
+          onSubmit={handleTrailSubmit}
+          trailData={null}
+        />
+      )}
     </fieldset>
   );
 };
