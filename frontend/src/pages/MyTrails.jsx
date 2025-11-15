@@ -133,6 +133,9 @@ const MyTrails = ({ handleLogout }) => {
               key={trail.id}
               trail={trail}
               onClickDetails={() => setSelectedTrail(trail)}
+              onEdit={() => console.log("Editar:", trail)}
+              onDelete={() => console.log("Excluir:", trail.id)}
+              showActions={true} // ⬅️ AGORA SIM! Ícones aparecem
             />
           ))
         ) : (
