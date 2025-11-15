@@ -1,7 +1,7 @@
 import React from 'react';
-import { MapPin, Mountain, Ruler } from 'lucide-react';
+import { MapPin, Mountain, Ruler , Pencil, Trash } from 'lucide-react';
 
-export default function TrailCard({ trail, onClickDetails }) {
+export default function TrailCard({ trail, onClickDetails, onEdit, onDelete, showActions = false }) {
   // Validação de dados
   if (
     !trail ||
@@ -53,14 +53,35 @@ export default function TrailCard({ trail, onClickDetails }) {
           </div>
         </div>
 
+        <div className="mt-4 flex items-center justify-between"> {/* 3 botões na mesma linha */}
         {/* Botão Detalhes */}
         <button
           onClick={onClickDetails}
-          className="mt-4 w-full py-2 text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition"
+          className="py-2 px-20 h-10 flex items-center justify-center text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition"
           aria-label={`Ver detalhes da trilha ${trail.name}`}
         >
           Ver Detalhes
         </button>
+
+          {/* Botões Editar e Excluir */}
+          {showActions && (
+          <div className="flex gap-3">
+            <button
+              onClick={onEdit}
+              className="h-10 w-10 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full transition"
+            >
+              <Pencil className="h-5 w-5" />
+            </button>
+
+            <button
+              onClick={onDelete}
+              className="h-10 w-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-600 rounded-full transition"
+            >
+              <Trash className="h-5 w-5" />
+            </button>
+          </div>
+          )}
+        </div>
       </div>
     </article>
   );
