@@ -19,10 +19,11 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // rotas em que a sidebar não deve aparecer
+  // Rotas sem sidebar
   const hideSidebarRoutes = ['/login', '/register'];
   const shouldHideSidebar = hideSidebarRoutes.includes(location.pathname);
 
+  // Carregar estado de autenticação
   useEffect(() => {
     const auth = localStorage.getItem('isAuthenticated');
     const userData = localStorage.getItem('user');
@@ -32,7 +33,6 @@ function App() {
       setUser(JSON.parse(userData));
     }
 
-    // Finaliza o carregamento
     setIsLoading(false);
   }, []);
 
@@ -44,9 +44,7 @@ function App() {
   };
 
   function capitalizeWords(str) {
-    return str
-      .toLowerCase() // deixa tudo minúsculo
-      .replace(/\b\w/g, char => char.toUpperCase()); // coloca em maiúsculo a primeira letra de cada palavra
+    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
   }
 
   const handleAuth = async (data, mode) => {
@@ -57,11 +55,13 @@ function App() {
         navigate('/login');
       } else {
         const res = await login(data);
-        // TODO: refatorar com token do usuario quando implementar no Back
+
         setUser(res.user);
         setIsAuthenticated(true);
+
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('user', JSON.stringify(res.user));
+
         toast.success(`Bem-vindo(a), ${capitalizeWords(res.user.name)}!`);
         navigate('/home');
       }
@@ -71,21 +71,33 @@ function App() {
     }
   };
 
-  // Enquanto ainda está carregando o estado do login, não renderiza as rotas
+  // Tela de carregamento
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen text-gray-600">Carregando...</div>
+      <div
+        className="flex justify-center items-center h-screen text-gray-600"
+        role="status"
+        aria-live="polite"
+      >
+        Carregando...
+      </div>
     );
   }
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 font-sans text-text">
-      {/* mostra a sidebar apenas se não estiver em / */}
-      {!shouldHideSidebar && <Sidebar handleLogout={handleLogout} />}
+      {/* Sidebar — barra lateral */}
+      {!shouldHideSidebar && (
+        <aside aria-label="Barra lateral de navegação" className="h-full">
+          <Sidebar handleLogout={handleLogout} />
+        </aside>
+      )}
 
-      {/* main ocupa a tela toda em /login */}
+      {/* Conteúdo principal */}
       <main
         ref={mainRef}
+        id="main-content"
+        role="main"
         className={`flex-1 overflow-y-auto bg-gray-50 ${
           shouldHideSidebar ? 'w-full h-full' : 'p-4'
         }`}
@@ -110,7 +122,8 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Rota /minhas-trilhas com rotas aninhadas */}
+
+          {/* Rotas aninhadas */}
           <Route
             path="/minhas-trilhas"
             element={
@@ -126,15 +139,17 @@ function App() {
             path="/sobre"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <About />
+                <About handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
-          {/* Página não encontrada → redireciona para login */}
+
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
 
+      {/* Botão Scroll To Top */}
       <ScrollToTop scrollRef={mainRef} />
     </div>
   );

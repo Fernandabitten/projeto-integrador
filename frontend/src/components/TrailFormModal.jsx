@@ -3,6 +3,7 @@ import { X, ImageUp, FileUp, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { NavLink } from 'react-router-dom';
 import { createTrail } from '../services/trailsService';
+import { getStates, getCitiesByState } from '../services/ibgeService';
 
 const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
   const MAX_PHOTOS = 10;
@@ -23,41 +24,33 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
 
   // Buscar todos os estados
   useEffect(() => {
-    const fetchStates = async () => {
+    async function loadStates() {
       try {
-        const res = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-        const data = await res.json();
-        // Ordena por nome
-        const sorted = data.sort((a, b) => a.nome.localeCompare(b.nome));
-        setStates(sorted);
-      } catch (error) {
-        console.error('Erro ao buscar estados:', error);
-        toast.error('Erro ao carregar estados do IBGE');
+        const list = await getStates();
+        setStates(list);
+      } catch (err) {
+        toast.error('Erro ao carregar estados');
       }
-    };
-    fetchStates();
+    }
+    loadStates();
   }, []);
 
   // Buscar cidades do estado selecionado
   useEffect(() => {
-    const fetchCities = async () => {
+    async function loadCities() {
       if (!state) return;
       setLoadingCities(true);
+
       try {
-        const res = await fetch(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state}/municipios`
-        );
-        const data = await res.json();
-        const sorted = data.map(c => c.nome).sort((a, b) => a.localeCompare(b));
-        setCities(sorted);
-      } catch (error) {
-        console.error('Erro ao buscar cidades:', error);
-        toast.error('Erro ao carregar cidades do IBGE');
+        const list = await getCitiesByState(state);
+        setCities(list);
+      } catch (err) {
+        toast.error('Erro ao carregar cidades');
       } finally {
         setLoadingCities(false);
       }
-    };
-    fetchCities();
+    }
+    loadCities();
   }, [state]);
 
   const handleFileChange = (e, fileType) => {
@@ -181,7 +174,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
   return (
     <div
       className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 z-50 font-sans"
-      onClick={onClose}
+      onClick={e => e.stopPropagation()}
     >
       <div
         className="bg-white shadow-2xl w-full h-screen max-h-none overflow-y-auto transform transition-all duration-300 scale-100 rounded-none md:rounded-xl md:max-w-4xl md:max-h-[90vh] md:h-auto"

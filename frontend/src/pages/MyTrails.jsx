@@ -11,16 +11,20 @@ const MyTrails = ({ handleLogout }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTrail, setSelectedTrail] = useState(null);
+
   const [filters, setFilters] = useState({
     state: 'todas',
     city: 'todas',
     difficulty: 'todas',
   });
 
-  // Obtem usuário logado
+  // Usuario logado
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const userId = storedUser?.id;
 
+  // ─────────────────────────────────────
+  // Buscar trilhas do usuário
+  // ─────────────────────────────────────
   async function fetchData() {
     try {
       setLoading(true);
@@ -28,9 +32,7 @@ const MyTrails = ({ handleLogout }) => {
 
       const result = await fetchTrails();
 
-      // Filtra apenas as trilhas do usuário logado
       const userTrails = result.filter(trail => trail.userId === userId);
-
       setData(userTrails);
     } catch (err) {
       console.error('Erro ao buscar trilhas:', err.message);
@@ -49,64 +51,73 @@ const MyTrails = ({ handleLogout }) => {
     }
   }, [userId]);
 
-  //Filtro dinâmico por estado, cidade e dificuldade
+  // ─────────────────────────────────────
+  // Filtros dinâmicos
+  // ─────────────────────────────────────
   useEffect(() => {
-    let filteredData = [...data];
+    const lower = str => str.trim().toLowerCase();
+    let result = data;
 
     if (filters.state !== 'todas') {
-      filteredData = filteredData.filter(
-        t => t.state.trim().toLowerCase() === filters.state.trim().toLowerCase()
-      );
+      result = result.filter(t => lower(t.state) === lower(filters.state));
     }
 
     if (filters.city !== 'todas') {
-      filteredData = filteredData.filter(
-        t => t.city.trim().toLowerCase() === filters.city.trim().toLowerCase()
-      );
+      result = result.filter(t => lower(t.city) === lower(filters.city));
     }
 
     if (filters.difficulty !== 'todas') {
-      filteredData = filteredData.filter(
-        t => t.difficulty.trim().toLowerCase() === filters.difficulty.trim().toLowerCase()
-      );
+      result = result.filter(t => lower(t.difficulty) === lower(filters.difficulty));
     }
 
-    setFiltered(filteredData);
+    setFiltered(result);
   }, [filters, data]);
 
-  // Renderização
+  // ─────────────────────────────────────
+  // Estados: Loading / Error
+  // ─────────────────────────────────────
   if (loading) {
-    return <div className="p-8 text-center">Carregando trilhas...</div>;
+    return <main className="p-8 text-center">Carregando trilhas...</main>;
   }
 
   if (error) {
     return (
-      <div className="p-8 text-red-600 border border-red-300 bg-red-50 rounded-lg">
-        Erro: <strong>{error}</strong>
-        <p className="mt-2 text-sm text-red-500">
-          Verifique se você está logado e se a API está rodando.
-        </p>
-      </div>
+      <main className="p-8">
+        <div className="text-red-600 border border-red-300 bg-red-50 rounded-lg p-4">
+          Erro: <strong>{error}</strong>
+          <p className="mt-2 text-sm text-red-500">
+            Verifique seu login e se a API está funcionando.
+          </p>
+        </div>
+      </main>
     );
   }
 
+  // ─────────────────────────────────────
+  // Render principal
+  // ─────────────────────────────────────
   return (
-    <div className="flex-1 ml-15 md:ml-0 md:pt-0 pt-0 p-2">
-      <div className="flex justify-between items-center mb-2">
+    <main className="flex-1 p-2 ml-15 md:ml-0 md:pt-0">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-2">
         <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold">Minhas Trilhas</h1>
         <AvatarMenu handleLogout={handleLogout} />
-      </div>
+      </header>
 
       <hr className="border-t border-text/50 mb-6" />
 
-      <FilterBar
-        trails={data}
-        onFilterChange={setFilters}
-        filters={filters}
-        onTrailAdded={fetchData}
-      />
+      {/* Filtros */}
+      <section className="mb-6">
+        <FilterBar
+          trails={data}
+          onFilterChange={setFilters}
+          filters={filters}
+          onTrailAdded={fetchData}
+        />
+      </section>
 
-      <div
+      {/* Lista */}
+      <section
         className="
           grid 
           gap-8 
@@ -117,18 +128,23 @@ const MyTrails = ({ handleLogout }) => {
         "
       >
         {filtered.length > 0 ? (
-          filtered.map(t => (
-            <TrailCard key={t.id} trail={t} onClickDetails={() => setSelectedTrail(t)} />
+          filtered.map(trail => (
+            <TrailCard
+              key={trail.id}
+              trail={trail}
+              onClickDetails={() => setSelectedTrail(trail)}
+            />
           ))
         ) : (
-          <div className="col-span-full text-center text-gray-500">
+          <p className="col-span-full text-center text-gray-500">
             Você ainda não cadastrou nenhuma trilha.
-          </div>
+          </p>
         )}
-      </div>
+      </section>
 
+      {/* Modal */}
       <TrailDetailsModal trail={selectedTrail} onClose={() => setSelectedTrail(null)} />
-    </div>
+    </main>
   );
 };
 

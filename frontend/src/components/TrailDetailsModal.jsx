@@ -16,47 +16,56 @@ const TrailDetailsModal = ({ trail, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/20 flex justify-end z-50">
-      <div className="bg-[#2B3C35] text-white w-full sm:w-[420px] h-full overflow-y-auto relative p-4 shadow-2xl">
-        {/* ✅ HEADER COM TÍTULO E BOTÃO X */}
-        <div className="flex items-center justify-between mb-3">
+    <div
+      className="fixed inset-0 bg-black/20 flex justify-end z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Detalhes da trilha ${trail.name}`}
+    >
+      <aside className="bg-[#2B3C35] text-white w-full sm:w-[420px] h-full overflow-y-auto relative p-4 shadow-2xl">
+        {/* HEADER */}
+        <header className="flex items-center justify-between mb-3">
           <h2 className="text-white text-lg font-semibold">Detalhes da trilha</h2>
 
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-white/20 transition"
+            aria-label="Fechar detalhes da trilha"
           >
-            <X size={20} className="text-white" />
+            <X size={20} aria-hidden="true" className="text-white" />
           </button>
-        </div>
+        </header>
 
         {/* Imagem principal */}
         {photos.length > 0 && (
-          <div className="relative">
+          <figure className="relative">
             <img
               src={photos[currentImage].url}
-              alt={trail.name}
+              alt={`Foto ${currentImage + 1} da trilha ${trail.name}`}
               className="w-full h-56 object-cover rounded-xl"
             />
 
+            {/* Navegação */}
             {photos.length > 1 && (
               <>
                 <button
                   onClick={prevImage}
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#9AF300] hover:bg-[#8AE000] p-2 rounded-full"
+                  aria-label="Imagem anterior"
                 >
-                  <ArrowLeft size={18} />
+                  <ArrowLeft size={18} aria-hidden="true" />
                 </button>
 
                 <button
                   onClick={nextImage}
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#9AF300] hover:bg-[#8AE000] p-2 rounded-full"
+                  aria-label="Próxima imagem"
                 >
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} aria-hidden="true" />
                 </button>
               </>
             )}
-          </div>
+          </figure>
         )}
 
         {/* Miniaturas */}
@@ -65,7 +74,7 @@ const TrailDetailsModal = ({ trail, onClose }) => {
             <img
               key={i}
               src={p.url}
-              alt={`thumb-${i}`}
+              alt={`Miniatura ${i + 1} da trilha ${trail.name}`}
               onClick={() => setCurrentImage(i)}
               className={`w-20 h-14 object-cover rounded-lg cursor-pointer border-2 ${
                 currentImage === i ? 'border-lime-400' : 'border-transparent'
@@ -74,12 +83,12 @@ const TrailDetailsModal = ({ trail, onClose }) => {
           ))}
         </div>
 
-        {/* Informações */}
-        <div className="mt-4">
+        {/* Informações gerais */}
+        <section className="mt-4">
           <h2 className="text-xl font-bold">{trail.name}</h2>
 
           <div className="flex items-center gap-2 mt-1 text-sm text-gray-200">
-            <MapPin size={16} />
+            <MapPin size={16} aria-hidden="true" />
             <span>
               {trail.city}, {trail.state}
             </span>
@@ -87,28 +96,31 @@ const TrailDetailsModal = ({ trail, onClose }) => {
 
           <div className="flex items-center gap-3 mt-1 text-sm">
             <div className="flex items-center gap-1">
-              <Mountain size={16} className="text-yellow-400" />
+              <Mountain size={16} className="text-yellow-400" aria-hidden="true" />
               <span>{trail.difficulty}</span>
             </div>
 
             <div className="flex items-center gap-1">
-              <Ruler size={16} className="text-blue-400" />
-              <span>{trail.distance}</span>
+              <Ruler size={16} className="text-blue-400" aria-hidden="true" />
+              <span>{trail.distance} km</span>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Descrição */}
-        <div className="mt-4">
+        <section className="mt-4">
           <h3 className="text-lg font-semibold mb-1">Descrição</h3>
           <p className="text-gray-100 text-sm leading-relaxed">{trail.description}</p>
-        </div>
+        </section>
 
-        {/* Botão ver mapa */}
-        <button className="w-full mt-5 bg-lime-400 hover:bg-lime-500 text-green-900 font-semibold py-2 rounded-xl transition">
+        {/* Botão Ver mapa */}
+        <button
+          className="w-full mt-5 bg-lime-400 hover:bg-lime-500 text-green-900 font-semibold py-2 rounded-xl transition"
+          aria-label="Ver mapa da trilha"
+        >
           Ver mapa da Trilha
         </button>
-      </div>
+      </aside>
     </div>
   );
 };
