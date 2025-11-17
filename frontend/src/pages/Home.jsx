@@ -28,7 +28,7 @@ const Home = ({ handleLogout }) => {
         setError(null);
 
         const result = await fetchTrails();
-        setData(result);
+        setData(result.data);
       } catch (err) {
         console.error('Erro ao buscar dados na Home:', err.message);
         setError(err.message);
