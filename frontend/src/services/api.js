@@ -63,3 +63,29 @@ export async function getJSON(url, token) {
     },
   });
 }
+
+/**
+ * PUT JSON — atualiza um registro
+ */
+export async function putJSON(url, body, token) {
+  return request(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: 'Bearer ' + token } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+/**
+ * DELETE JSON — remove um registro
+ */
+export async function deleteJSON(url, token) {
+  return request(url, {
+    method: 'DELETE',
+    headers: {
+      ...(token ? { Authorization: 'Bearer ' + token } : {}),
+    },
+  });
+}
