@@ -1,3 +1,4 @@
+const { sendSuccess, sendError } = require("../utils/httpResponses");
 // Simulação de dados de trilhas (Trail) com base no diagrama de classes
 
 const trails = [
@@ -148,20 +149,44 @@ const trails = [
   },
 ];
 
-// Função para listar todas as trails!
+// Listar trilhas!
 exports.listTrails = (req, res) => {
-  res.json(trails);
+  const { page, limit } = req.query;
+
+  // Validação opcional de paginação
+  if (page && isNaN(page)) {
+    return sendError(res, 400, "Parâmetro 'page' inválido.");
+  }
+  if (limit && isNaN(limit)) {
+    return sendError(res, 400, "Parâmetro 'limit' inválido.");
+  }
+
+  return sendSuccess(res, 200, trails);
 };
 
-// Adiciona nova trilha
+// Adicionar trilha
 exports.createTrail = (req, res) => {
+  const { name, state, city, description, difficulty, distance, userId } =
+    req.body;
+
+  // 400 → validação simples
+  if (!name || !state || !city || !description || !difficulty || !distance) {
+    return sendError(res, 400, "Dados obrigatórios ausentes.");
+  }
+
+  // 401 → Simulação de autenticação
+  if (!userId) {
+    return sendError(res, 401, "Usuário não autenticado.");
+  }
+
   const newTrail = {
-    id: `t${Date.now()}`,
+    id: "t-" + Date.now(),
     ...req.body,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
   trails.push(newTrail);
-  res.status(201).json(newTrail);
+
+  return sendSuccess(res, 201, newTrail);
 };
