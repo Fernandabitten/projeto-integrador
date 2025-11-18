@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, ImageUp, FileUp, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { NavLink } from 'react-router-dom';
-import { createTrail } from '../services/trailsService';
+import { createTrail, updateTrail } from '../services/trailsService';
 import { getStates, getCitiesByState } from '../services/ibgeService';
 
 const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
@@ -121,7 +121,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
     }
 
     // 2. Verificação Obrigatória do Arquivo de Rota
-    const hasGpxFile = gpxFile || (isEditing && trailData?.arquivo_url);
+    const hasGpxFile = gpxFile || (isEditing && trailData?.filePath);
     if (!hasGpxFile) {
       toast.error('É obrigatório anexar um arquivo de rota (GPX/KML).');
       return; // Impede a submissão
@@ -148,15 +148,24 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
     };
 
     try {
-      const newTrail = await createTrail(trailPayload);
-      //notifica o componente pai
-      if (onSubmit) onSubmit(newTrail, mode);
+      let savedTrail;
+
+      if (isEditing) {
+        // ATUALIZAR
+        savedTrail = await updateTrail(trailData.id, trailPayload);
+      } else {
+        // CRIAR
+        savedTrail = await createTrail(trailPayload);
+      }
+
+      if (onSubmit) onSubmit(savedTrail, mode);
       onClose();
     } catch (err) {
       console.error('Erro ao cadastrar trilha:', err);
       toast.error('Erro ao cadastrar trilha: ' + err.message);
     } finally {
       setIsLoading(false);
+      onClose();
     }
   };
 
@@ -169,7 +178,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
   const totalPhotos = photos.length + newPhotos.length;
   const isMaxPhotos = totalPhotos >= MAX_PHOTOS;
   // Verifica se o GPX é obrigatório e está faltando
-  const isGpxMissing = !gpxFile && !(isEditing && trailData?.arquivo_url);
+  const isGpxMissing = !gpxFile && !(isEditing && trailData?.filePath);
 
   return (
     <div
@@ -358,7 +367,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
             {!gpxFile && (
               <label className="flex items-center justify-center w-full p-3 border-2 border-dashed border-gray-300 text-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 transition">
                 <FileUp size={20} className="mr-2" />
-                {isEditing && trailData?.arquivo_url
+                {isEditing && trailData?.filePath
                   ? 'Substituir Rota'
                   : 'Anexar Rota (.gpx ou .kml)'}
                 <input
@@ -369,9 +378,9 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
                 />
               </label>
             )}
-            {isEditing && trailData?.arquivo_url && !gpxFile && (
+            {isEditing && trailData?.filePath && !gpxFile && (
               <p className="text-sm text-gray-500">
-                Rota atual: {trailData.arquivo_url.split('/').pop()}
+                Rota atual: {trailData.filePath.split('/').pop()}
               </p>
             )}
           </div>

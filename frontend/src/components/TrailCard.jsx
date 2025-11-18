@@ -1,7 +1,13 @@
 import React from 'react';
-import { MapPin, Mountain, Ruler , Pencil, Trash } from 'lucide-react';
+import { MapPin, Mountain, Ruler, Pencil, Trash } from 'lucide-react';
 
-export default function TrailCard({ trail, onClickDetails, onEdit, onDelete, showActions = false }) {
+export default function TrailCard({
+  trail,
+  onClickDetails,
+  onEdit,
+  onDelete,
+  showActions = false,
+}) {
   // Validação de dados
   if (
     !trail ||
@@ -22,7 +28,7 @@ export default function TrailCard({ trail, onClickDetails, onEdit, onDelete, sho
 
   return (
     <article
-      className="bg-bg-2 rounded-2xl shadow-md overflow-hidden border border-gray-200 transition-transform hover:scale-[1.02]"
+      className="relative bg-bg-2 rounded-2xl shadow-md overflow-hidden border border-gray-200 transition-transform hover:scale-[1.02]"
       aria-label={`Cartão da trilha ${trail.name}`}
     >
       <img
@@ -53,33 +59,41 @@ export default function TrailCard({ trail, onClickDetails, onEdit, onDelete, sho
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between"> {/* 3 botões na mesma linha */}
-        {/* Botão Detalhes */}
-        <button
-          onClick={onClickDetails}
-          className="py-2 px-20 h-10 flex items-center justify-center text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition"
-          aria-label={`Ver detalhes da trilha ${trail.name}`}
-        >
-          Ver Detalhes
-        </button>
-
+        <div className="mt-4 flex items-center justify-between gap-2">
+          {/* Botão Detalhes */}
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              onClickDetails();
+            }}
+            className="mt-4 w-full py-2 text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition relative z-20"
+            aria-label={`Ver detalhes da trilha ${trail.name}`}
+          >
+            Ver Detalhes
+          </button>
           {/* Botões Editar e Excluir */}
           {showActions && (
-          <div className="flex gap-3">
-            <button
-              onClick={onEdit}
-              className="h-10 w-10 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full transition"
-            >
-              <Pencil className="h-5 w-5" />
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
+                className="h-10 w-10 flex items-center justify-center bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full transition"
+              >
+                <Pencil className="h-5 w-5" />
+              </button>
 
-            <button
-              onClick={onDelete}
-              className="h-10 w-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-600 rounded-full transition"
-            >
-              <Trash className="h-5 w-5" />
-            </button>
-          </div>
+              <button
+                onClick={e => {
+                  e.stopPropagation(); // impede o clique de subir para o card
+                  onDelete();
+                }}
+                className="h-10 w-10 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-600 rounded-full transition relative z-30"
+              >
+                <Trash className="h-5 w-5" />
+              </button>
+            </div>
           )}
         </div>
       </div>

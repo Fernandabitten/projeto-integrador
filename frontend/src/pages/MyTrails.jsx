@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { fetchTrails } from '../services/trailsService';
+import toast from 'react-hot-toast';
+import { fetchTrails, deleteTrail } from '../services/trailsService';
 import TrailCard from '../components/TrailCard';
 import FilterBar from '../components/FilterBar';
 import TrailDetailsModal from '../components/TrailDetailsModal';
 import AvatarMenu from '../components/AvatarMenu';
+import TrailFormModal from '../components/TrailFormModal';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const MyTrails = ({ handleLogout }) => {
   const [data, setData] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedTrail, setSelectedTrail] = useState(null);
+  const [selectedTrail, setSelectedTrail] = useState(null); // usado só para detalhes
+  const [trailToDelete, setTrailToDelete] = useState(null); // usado só para deletar
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingTrail, setEditingTrail] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [filters, setFilters] = useState({
     state: 'todas',
@@ -74,6 +81,36 @@ const MyTrails = ({ handleLogout }) => {
   }, [filters, data]);
 
   // ─────────────────────────────────────
+  // Editar trilha
+  // ─────────────────────────────────────
+  const handleEditTrail = trail => {
+    setEditingTrail(trail);
+    setIsFormOpen(true);
+  };
+
+  // ─────────────────────────────────────
+  // Deletar trilha
+  // ─────────────────────────────────────
+  const handleDeleteClick = trail => {
+    setTrailToDelete(trail);
+    setDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await deleteTrail(trailToDelete.id);
+      fetchData();
+
+      setDialogOpen(false);
+      setTrailToDelete(null);
+      toast.success('Trilha excluída com sucesso!');
+    } catch (err) {
+      toast.error('Erro ao excluir trilha.');
+      setDialogOpen(false);
+    }
+  };
+
+  // ─────────────────────────────────────
   // Estados: Loading / Error
   // ─────────────────────────────────────
   if (loading) {
@@ -133,9 +170,9 @@ const MyTrails = ({ handleLogout }) => {
               key={trail.id}
               trail={trail}
               onClickDetails={() => setSelectedTrail(trail)}
-              onEdit={() => console.log("Editar:", trail)}
-              onDelete={() => console.log("Excluir:", trail.id)}
-              showActions={true} // ⬅️ AGORA SIM! Ícones aparecem
+              onEdit={() => handleEditTrail(trail)}
+              onDelete={() => handleDeleteClick(trail)}
+              showActions={true}
             />
           ))
         ) : (
@@ -146,7 +183,30 @@ const MyTrails = ({ handleLogout }) => {
       </section>
 
       {/* Modal */}
+
       <TrailDetailsModal trail={selectedTrail} onClose={() => setSelectedTrail(null)} />
+      {isFormOpen && (
+        <TrailFormModal
+          mode={editingTrail ? 'edit' : 'create'}
+          trailData={editingTrail}
+          onClose={() => {
+            setIsFormOpen(false);
+            setEditingTrail(null);
+          }}
+          onSubmit={() => {
+            fetchData();
+            setIsFormOpen(false);
+            setEditingTrail(null);
+          }}
+        />
+      )}
+      <ConfirmDialog
+        open={dialogOpen}
+        title="Excluir trilha"
+        message={`Tem certeza que deseja excluir "${trailToDelete?.name}"? Esta ação não pode ser desfeita.`}
+        onConfirm={confirmDelete}
+        onCancel={() => setDialogOpen(false)}
+      />
     </main>
   );
 };
