@@ -56,13 +56,13 @@ function App() {
       } else {
         const res = await login(data);
 
-        setUser(res.user);
+        setUser(res.data);
         setIsAuthenticated(true);
 
         localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('user', JSON.stringify(res.user));
+        localStorage.setItem('user', JSON.stringify(res.data));
 
-        toast.success(`Bem-vindo(a), ${capitalizeWords(res.user.name)}!`);
+        toast.success(`Bem-vindo(a), ${capitalizeWords(res.data.name)}!`);
         navigate('/home');
       }
     } catch (error) {

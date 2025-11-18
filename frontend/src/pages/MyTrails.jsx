@@ -39,7 +39,7 @@ const MyTrails = ({ handleLogout }) => {
 
       const result = await fetchTrails();
 
-      const userTrails = result.filter(trail => trail.userId === userId);
+      const userTrails = result.data.filter(trail => trail.userId === userId);
       setData(userTrails);
     } catch (err) {
       console.error('Erro ao buscar trilhas:', err.message);
