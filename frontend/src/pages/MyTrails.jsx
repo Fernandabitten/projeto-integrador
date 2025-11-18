@@ -97,8 +97,15 @@ const MyTrails = ({ handleLogout }) => {
   };
 
   const confirmDelete = async () => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const userId = storedUser?.id;
+
+    if (!userId) {
+      toast.error('Usuário não autenticado.');
+      return;
+    }
     try {
-      await deleteTrail(trailToDelete.id);
+      await deleteTrail(trailToDelete.id, userId);
       fetchData();
 
       setDialogOpen(false);

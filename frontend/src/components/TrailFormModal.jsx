@@ -141,8 +141,10 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
       city,
       description,
       difficulty,
-      photos: [...formattedNewPhotos],
-      filePath: gpxFile ? `gpx/${gpxFile.name}` : null,
+      // Mescla fotos existentes com as novas editadas
+      photos: [...photos, ...formattedNewPhotos],
+      // Se houver novo arquivo, usa ele. Senão, mantém o existente se estiver editando.
+      filePath: gpxFile ? `gpx/${gpxFile.name}` : isEditing ? trailData?.filePath : null, // Se for edição, mantém o trailData.filePath se gpxFile for null
       userId,
       distance: 'N/A',
     };

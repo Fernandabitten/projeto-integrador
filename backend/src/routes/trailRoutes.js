@@ -7,4 +7,8 @@ router.get("/", trailController.listTrails);
 
 router.post("/", trailController.createTrail);
 
+router.put("/:id", trailController.updateTrail);
+
+router.delete("/:id", trailController.deleteTrail);
+
 module.exports = router; // Exporta o router
