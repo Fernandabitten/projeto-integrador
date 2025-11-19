@@ -16,6 +16,6 @@ export function updateTrail(id, data) {
 }
 
 // Excluir trilha
-export function deleteTrail(id) {
-  return deleteJSON(`/trails/${id}`);
+export function deleteTrail(id, userId) {
+  return deleteJSON(`/trails/${id}`, userId);
 }

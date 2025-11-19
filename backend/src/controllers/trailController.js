@@ -190,3 +190,60 @@ exports.createTrail = (req, res) => {
 
   return sendSuccess(res, 201, newTrail);
 };
+
+//Editar trilha
+exports.updateTrail = (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  const trail = trails.find((t) => t.id === id);
+
+  if (!trail) {
+    return sendError(res, 404, "Trilha não encontrada.");
+  }
+
+  // 401
+  if (!userId) {
+    return sendError(res, 401, "Usuário não autenticado.");
+  }
+
+  // 403
+  if (trail.userId !== userId) {
+    return sendError(
+      res,
+      403,
+      "Você não tem permissão para editar esta trilha."
+    );
+  }
+
+  // Atualiza
+  Object.assign(trail, req.body, { updatedAt: new Date() });
+
+  return sendSuccess(res, 200, trail);
+};
+
+// Deletar trilha
+exports.deleteTrail = (req, res) => {
+  const { id } = req.params;
+  const userId = req.headers["x-user-id"];
+
+  const index = trails.findIndex((t) => t.id === id);
+
+  if (index === -1) {
+    return sendError(res, 404, "Trilha não encontrada.");
+  }
+
+  const trail = trails[index];
+
+  if (!userId) {
+    return sendError(res, 401, "Usuário não autenticado.");
+  }
+
+  if (trail.userId != userId) {
+    return sendError(res, 403, "Você não pode excluir esta trilha.");
+  }
+
+  trails.splice(index, 1);
+
+  return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
+};

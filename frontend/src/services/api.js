@@ -81,11 +81,12 @@ export async function putJSON(url, body, token) {
 /**
  * DELETE JSON — remove um registro
  */
-export async function deleteJSON(url, token) {
+export async function deleteJSON(url, userId, token) {
   return request(url, {
     method: 'DELETE',
     headers: {
       ...(token ? { Authorization: 'Bearer ' + token } : {}),
+      'x-user-id': userId,
     },
   });
 }
