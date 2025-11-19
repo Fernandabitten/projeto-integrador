@@ -1,4 +1,4 @@
-import { createTrailCore } from "../core/createTrailCore";
+import { createTrailCore } from "../src/core/createTrailCore.js";
 
 describe("createTrailCore", () => {
   test("deve criar trilha corretamente (happy path)", () => {

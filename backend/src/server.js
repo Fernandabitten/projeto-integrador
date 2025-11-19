@@ -1,18 +1,22 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import logger from "./middlewares/logger.js";
+import trilhaRoutes from "./routes/trailRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+
 const app = express();
 const PORT = 3000;
-const cors = require("cors");
-const logger = require("./middlewares/logger");
-const trilhaRoutes = require("./routes/trailRoutes");
-const userRoutes = require("./routes/userRoutes");
 
 // Middleware para permitir JSON no corpo das requisições
 app.use(express.json());
-//permitir requisições de origens diferentes
+
+// Permitir requisições de origens diferentes
 app.use(cors());
+
+// Logger
 app.use(logger);
 
-//Rota teste
+// Rota teste
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -20,6 +24,7 @@ app.get("/", (req, res) => {
 // Usa as rotas de trilhas
 app.use("/trails", trilhaRoutes);
 
+// Rotas de usuário / autenticação
 app.use("/auth", userRoutes);
 
 // Middleware de erro
@@ -28,6 +33,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ erro: "Ocorreu um erro no servidor" });
 });
 
+// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

@@ -1,11 +1,13 @@
-exports.sendSuccess = (res, status, data) => {
-  return res.status(status).json({ success: true, data });
-};
-
-exports.sendError = (res, status, message, details = null) => {
-  return res.status(status).json({
-    success: false,
-    message,
-    ...(details && { details }),
+export function sendSuccess(res, statusCode, data) {
+  return res.status(statusCode).json({
+    success: true,
+    data,
   });
-};
+}
+
+export function sendError(res, statusCode, message) {
+  return res.status(statusCode).json({
+    success: false,
+    error: message,
+  });
+}
