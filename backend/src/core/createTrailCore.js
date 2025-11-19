@@ -1,4 +1,4 @@
-module.exports = function createTrailCore(trails, data) {
+export function createTrailCore(trails, data) {
   const { name, state, city, description, difficulty, distance, userId } = data;
 
   if (!name || !state || !city || !description || !difficulty || !distance) {
