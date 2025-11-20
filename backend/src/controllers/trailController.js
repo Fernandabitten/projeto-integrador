@@ -1,159 +1,16 @@
-const { sendSuccess, sendError } = require("../utils/httpResponses");
-// Simulação de dados de trilhas (Trail) com base no diagrama de classes
+import { sendSuccess, sendError } from "../utils/httpResponses.js";
 
+// Simulação de base de dados em memória
 const trails = [
-  {
-    id: "t1-uuid-051",
-    name: "Trilha da Pedra da Rajada",
-    state: "São Paulo",
-    city: "Campinas",
-    description:
-      "Trilha com vista panorâmica, ideal para quem busca aventura e belas paisagens.",
-    difficulty: "Moderado",
-    distance: 4.5,
-    filePath: "/uploads/gpx/pedra-rajada.gpx",
-    createdAt: new Date("2025-04-01T08:00:00Z"),
-    updatedAt: new Date("2025-04-10T09:30:00Z"),
-    userId: "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78",
-    photos: [
-      {
-        id: "p1-uuid-001",
-        url: "https://picsum.photos/seed/rajada1/400/300",
-        path: "/uploads/photos/rajada1.jpg",
-        trailId: "t1-uuid-001",
-        createdAt: new Date("2025-04-01T08:30:00Z"),
-      },
-      {
-        id: "p1-uuid-002",
-        url: "https://picsum.photos/seed/rajada2/400/300",
-        path: "/uploads/photos/rajada2.jpg",
-        trailId: "t1-uuid-001",
-        createdAt: new Date("2025-04-01T08:45:00Z"),
-      },
-    ],
-    file: {
-      id: "f1-uuid-001",
-      path: "/uploads/files/rajada-mapa.gpx",
-      type: "application/gpx+xml",
-      url: "https://meuapp.com/files/rajada-mapa.gpx",
-      trailId: "t1-uuid-001",
-      createdAt: new Date("2025-04-01T09:00:00Z"),
-    },
-  },
-  {
-    id: "t1-uuid-001",
-    name: "Trilha da Pedra da Rajada",
-    state: "Ceará",
-    city: "Maranguape",
-    description:
-      "Trilha com vista panorâmica, ideal para quem busca aventura e belas paisagens.",
-    difficulty: "Moderado",
-    distance: 4.5,
-    filePath: "/uploads/gpx/pedra-rajada.gpx",
-    createdAt: new Date("2025-04-01T08:00:00Z"),
-    updatedAt: new Date("2025-04-10T09:30:00Z"),
-    userId: "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78",
-    photos: [
-      {
-        id: "p1-uuid-001",
-        url: "https://picsum.photos/seed/rajada1/400/300",
-        path: "/uploads/photos/rajada1.jpg",
-        trailId: "t1-uuid-001",
-        createdAt: new Date("2025-04-01T08:30:00Z"),
-      },
-      {
-        id: "p1-uuid-002",
-        url: "https://picsum.photos/seed/rajada2/400/300",
-        path: "/uploads/photos/rajada2.jpg",
-        trailId: "t1-uuid-001",
-        createdAt: new Date("2025-04-01T08:45:00Z"),
-      },
-    ],
-    file: {
-      id: "f1-uuid-001",
-      path: "/uploads/files/rajada-mapa.gpx",
-      type: "application/gpx+xml",
-      url: "https://meuapp.com/files/rajada-mapa.gpx",
-      trailId: "t1-uuid-001",
-      createdAt: new Date("2025-04-01T09:00:00Z"),
-    },
-  },
-  {
-    id: "t2-uuid-001",
-    name: "Trilha do Parque do Cocó",
-    state: "Ceará",
-    city: "Fortaleza",
-    description:
-      "Trilha urbana leve com vegetação nativa e acesso facilitado, ideal para iniciantes.",
-    difficulty: "Fácil",
-    distance: 8.0,
-    filePath: "/uploads/gpx/coco-trilha.gpx",
-    createdAt: new Date("2025-04-05T10:00:00Z"),
-    updatedAt: new Date("2025-04-08T12:00:00Z"),
-    userId: "b2c3d4e5-f6a7-8901-bc23-de45fg67hi89",
-    photos: [
-      {
-        id: "p2-uuid-001",
-        url: "https://picsum.photos/seed/coco1/400/300",
-        path: "/uploads/photos/coco1.jpg",
-        trailId: "t2-uuid-001",
-        createdAt: new Date("2025-04-05T10:30:00Z"),
-      },
-    ],
-    file: {
-      id: "f2-uuid-001",
-      path: "/uploads/files/coco-trilha.gpx",
-      type: "application/gpx+xml",
-      url: "https://meuapp.com/files/coco-trilha.gpx",
-      trailId: "t2-uuid-001",
-      createdAt: new Date("2025-04-05T10:35:00Z"),
-    },
-  },
-  {
-    id: "t3-uuid-001",
-    name: "Trilha da Esperança",
-    state: "Ceará",
-    city: "Guaramiranga",
-    description:
-      "Trilha desafiadora com subidas intensas e mirantes incríveis, ideal para praticantes experientes.",
-    difficulty: "Difícil",
-    distance: 5.0,
-    filePath: "/uploads/gpx/esperanca-trilha.gpx",
-    createdAt: new Date("2025-05-02T08:00:00Z"),
-    updatedAt: new Date("2025-05-05T10:15:00Z"),
-    userId: "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78",
-    photos: [
-      {
-        id: "p3-uuid-001",
-        url: "https://picsum.photos/seed/esperanca1/400/300",
-        path: "/uploads/photos/esperanca1.jpg",
-        trailId: "t3-uuid-001",
-        createdAt: new Date("2025-05-02T08:15:00Z"),
-      },
-      {
-        id: "p3-uuid-002",
-        url: "https://picsum.photos/seed/esperanca2/400/300",
-        path: "/uploads/photos/esperanca2.jpg",
-        trailId: "t3-uuid-001",
-        createdAt: new Date("2025-05-02T08:20:00Z"),
-      },
-    ],
-    file: {
-      id: "f3-uuid-001",
-      path: "/uploads/files/esperanca-trilha.gpx",
-      type: "application/gpx+xml",
-      url: "https://meuapp.com/files/esperanca-trilha.gpx",
-      trailId: "t3-uuid-001",
-      createdAt: new Date("2025-05-02T09:00:00Z"),
-    },
-  },
+  // ... SEU ARRAY DE TRILHAS AQUI (mantenha igual)
 ];
 
-// Listar trilhas!
-exports.listTrails = (req, res) => {
+/* ================================
+      GET /trails  
+================================ */
+export const listTrails = (req, res) => {
   const { page, limit } = req.query;
 
-  // Validação opcional de paginação
   if (page && isNaN(page)) {
     return sendError(res, 400, "Parâmetro 'page' inválido.");
   }
@@ -164,17 +21,16 @@ exports.listTrails = (req, res) => {
   return sendSuccess(res, 200, trails);
 };
 
-// Adicionar trilha
-exports.createTrail = (req, res) => {
-  const { name, state, city, description, difficulty, distance, userId } =
-    req.body;
+/* ================================
+      POST /trails
+================================ */
+export const createTrail = (req, res) => {
+  const { name, state, city, description, difficulty, distance, userId } = req.body;
 
-  // 400 → validação simples
   if (!name || !state || !city || !description || !difficulty || !distance) {
     return sendError(res, 400, "Dados obrigatórios ausentes.");
   }
 
-  // 401 → Simulação de autenticação
   if (!userId) {
     return sendError(res, 401, "Usuário não autenticado.");
   }
@@ -191,8 +47,10 @@ exports.createTrail = (req, res) => {
   return sendSuccess(res, 201, newTrail);
 };
 
-//Editar trilha
-exports.updateTrail = (req, res) => {
+/* ================================
+      PUT /trails/:id
+================================ */
+export const updateTrail = (req, res) => {
   const { id } = req.params;
   const { userId } = req.body;
 
@@ -202,28 +60,23 @@ exports.updateTrail = (req, res) => {
     return sendError(res, 404, "Trilha não encontrada.");
   }
 
-  // 401
   if (!userId) {
     return sendError(res, 401, "Usuário não autenticado.");
   }
 
-  // 403
   if (trail.userId !== userId) {
-    return sendError(
-      res,
-      403,
-      "Você não tem permissão para editar esta trilha."
-    );
+    return sendError(res, 403, "Você não tem permissão para editar esta trilha.");
   }
 
-  // Atualiza
   Object.assign(trail, req.body, { updatedAt: new Date() });
 
   return sendSuccess(res, 200, trail);
 };
 
-// Deletar trilha
-exports.deleteTrail = (req, res) => {
+/* ================================
+      DELETE /trails/:id
+================================ */
+export const deleteTrail = (req, res) => {
   const { id } = req.params;
   const userId = req.headers["x-user-id"];
 
@@ -239,7 +92,7 @@ exports.deleteTrail = (req, res) => {
     return sendError(res, 401, "Usuário não autenticado.");
   }
 
-  if (trail.userId != userId) {
+  if (trail.userId !== userId) {
     return sendError(res, 403, "Você não pode excluir esta trilha.");
   }
 
@@ -247,4 +100,3 @@ exports.deleteTrail = (req, res) => {
 
   return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
 };
-
