@@ -1,4 +1,6 @@
 import { sendSuccess, sendError } from "../utils/httpResponses.js";
+import { createTrailCore } from "../core/createTrailCore.js";
+import { updateTrailCore } from "../core/updateTrailCore.js";
 
 // Simulação de dados de trilhas (Trail) com base no diagrama de classes
 const trails = [
@@ -169,56 +171,26 @@ export const listTrails = (req, res) => {
   return sendSuccess(res, 200, trails);
 };
 
-export const createTrail = (req, res) => {
-  const { name, state, city, description, difficulty, distance, userId } =
-    req.body;
+export function createTrail(req, res) {
+  try {
+    const newTrail = createTrailCore(trails, req.body);
 
-  if (!name || !state || !city || !description || !difficulty || !distance) {
-    return sendError(res, 400, "Dados obrigatórios ausentes.");
+    return sendSuccess(res, 201, newTrail);
+  } catch (erro) {
+    res.status(400).json({ erro: erro.message });
   }
+}
 
-  if (!userId) {
-    return sendError(res, 401, "Usuário não autenticado.");
-  }
-
-  const newTrail = {
-    id: "t-" + Date.now(),
-    ...req.body,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  trails.push(newTrail);
-
-  return sendSuccess(res, 201, newTrail);
-};
-
-export const updateTrail = (req, res) => {
+export function updateTrail(req, res) {
   const { id } = req.params;
-  const { userId } = req.body;
 
-  const trail = trails.find((t) => t.id === id);
-
-  if (!trail) {
-    return sendError(res, 404, "Trilha não encontrada.");
+  try {
+    const updated = updateTrailCore(trails, id, req.body);
+    return sendSuccess(res, 200, updated);
+  } catch (error) {
+    return sendError(res, 400, error.message);
   }
-
-  if (!userId) {
-    return sendError(res, 401, "Usuário não autenticado.");
-  }
-
-  if (trail.userId !== userId) {
-    return sendError(
-      res,
-      403,
-      "Você não tem permissão para editar esta trilha."
-    );
-  }
-
-  Object.assign(trail, req.body, { updatedAt: new Date() });
-
-  return sendSuccess(res, 200, trail);
-};
+}
 
 export const deleteTrail = (req, res) => {
   const { id } = req.params;

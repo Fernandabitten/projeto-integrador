@@ -1,12 +1,20 @@
 export function createTrailCore(trails, data) {
   const { name, state, city, description, difficulty, distance, userId } = data;
 
-  if (!name || !state || !city || !description || !difficulty || !distance) {
-    throw new Error("Dados obrigatórios ausentes.");
-  }
-
   if (!userId) {
     throw new Error("Usuário não autenticado.");
+  }
+
+  if (
+    !name ||
+    !state ||
+    !city ||
+    !description ||
+    !difficulty ||
+    distance === undefined ||
+    distance === null
+  ) {
+    throw new Error("Dados obrigatórios ausentes.");
   }
 
   const newTrail = {
@@ -16,5 +24,6 @@ export function createTrailCore(trails, data) {
     updatedAt: new Date(),
   };
 
+  trails.push(newTrail);
   return newTrail;
-};
+}
