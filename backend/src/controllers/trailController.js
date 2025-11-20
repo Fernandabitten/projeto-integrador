@@ -1,14 +1,14 @@
+import { trails } from "../data/trails.js";
+import { createTrailCore } from "../core/createTrailCore.js";
+import { updateTrailCore } from "../core/updateTrailCore.js";
+import { deleteTrailCore } from "../core/deleteTrailCore.js";
+
 import { sendSuccess, sendError } from "../utils/httpResponses.js";
 
-// Simulação de base de dados em memória
-const trails = [
-  // ... SEU ARRAY DE TRILHAS AQUI (mantenha igual)
-];
-
-/* ================================
+/* =================================
       GET /trails  
-================================ */
-export const listTrails = (req, res) => {
+================================= */
+export function listTrails(req, res) {
   const { page, limit } = req.query;
 
   if (page && isNaN(page)) {
@@ -18,85 +18,69 @@ export const listTrails = (req, res) => {
     return sendError(res, 400, "Parâmetro 'limit' inválido.");
   }
 
+  // listagem não precisa de core (igual produtos)
   return sendSuccess(res, 200, trails);
-};
+}
 
-/* ================================
-      POST /trails
-================================ */
-export const createTrail = (req, res) => {
-  const { name, state, city, description, difficulty, distance, userId } = req.body;
+/* =================================
+      POST /trails  
+================================= */
+export function createTrail(req, res) {
+  try {
+    const { userId } = req.body;
 
-  if (!name || !state || !city || !description || !difficulty || !distance) {
-    return sendError(res, 400, "Dados obrigatórios ausentes.");
+    if (!userId) {
+      return sendError(res, 401, "Usuário não autenticado.");
+    }
+
+    const novaTrail = createTrailCore(req.body);
+    trails.push(novaTrail);
+
+    return sendSuccess(res, 201, novaTrail);
+
+  } catch (error) {
+    return sendError(res, 400, error.message);
   }
+}
 
-  if (!userId) {
-    return sendError(res, 401, "Usuário não autenticado.");
-  }
-
-  const newTrail = {
-    id: "t-" + Date.now(),
-    ...req.body,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  trails.push(newTrail);
-
-  return sendSuccess(res, 201, newTrail);
-};
-
-/* ================================
+/* =================================
       PUT /trails/:id
-================================ */
-export const updateTrail = (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.body;
+================================= */
+export function updateTrail(req, res) {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
 
-  const trail = trails.find((t) => t.id === id);
+    if (!userId) {
+      return sendError(res, 401, "Usuário não autenticado.");
+    }
 
-  if (!trail) {
-    return sendError(res, 404, "Trilha não encontrada.");
+    const atualizada = updateTrailCore(trails, id, req.body, userId);
+
+    return sendSuccess(res, 200, atualizada);
+
+  } catch (error) {
+    return sendError(res, error.status || 400, error.message);
   }
+}
 
-  if (!userId) {
-    return sendError(res, 401, "Usuário não autenticado.");
-  }
-
-  if (trail.userId !== userId) {
-    return sendError(res, 403, "Você não tem permissão para editar esta trilha.");
-  }
-
-  Object.assign(trail, req.body, { updatedAt: new Date() });
-
-  return sendSuccess(res, 200, trail);
-};
-
-/* ================================
+/* =================================
       DELETE /trails/:id
-================================ */
-export const deleteTrail = (req, res) => {
-  const { id } = req.params;
-  const userId = req.headers["x-user-id"];
+================================= */
+export function deleteTrail(req, res) {
+  try {
+    const { id } = req.params;
+    const userId = req.headers["x-user-id"];
 
-  const index = trails.findIndex((t) => t.id === id);
+    if (!userId) {
+      return sendError(res, 401, "Usuário não autenticado.");
+    }
 
-  if (index === -1) {
-    return sendError(res, 404, "Trilha não encontrada.");
+    deleteTrailCore(trails, id, userId);
+
+    return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
+
+  } catch (error) {
+    return sendError(res, error.status || 400, error.message);
   }
-
-  const trail = trails[index];
-
-  if (!userId) {
-    return sendError(res, 401, "Usuário não autenticado.");
-  }
-
-  if (trail.userId !== userId) {
-    return sendError(res, 403, "Você não pode excluir esta trilha.");
-  }
-
-  trails.splice(index, 1);
-
-  return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
-};
+}
