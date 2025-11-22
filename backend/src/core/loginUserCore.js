@@ -1,4 +1,6 @@
-export function loginUserCore(users, data) {
+import { comparePassword } from "../utils/auth.js";
+
+export async function loginUserCore(users, data) {
   const { email, password } = data;
 
   if (!email || !password) {
@@ -11,8 +13,13 @@ export function loginUserCore(users, data) {
     throw new Error("Usuário não encontrado.");
   }
 
-  if (user.password !== password) {
-    throw new Error("Senha incorreta.");
+  const isMatch = await comparePassword(password, user.password);
+
+  if (!isMatch) {
+    return {
+      status: 401,
+      message: "Senha incorreta.",
+    };
   }
 
   return {

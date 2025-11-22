@@ -1,4 +1,6 @@
-export function registerUserCore(users, { name, email, password }) {
+import { hashPassword, generateToken } from "../utils/auth.js";
+
+export async function registerUserCore(users, { name, email, password }) {
   if (!name || !email || !password) {
     throw new Error("Todos os campos são obrigatórios.");
   }
@@ -8,19 +10,30 @@ export function registerUserCore(users, { name, email, password }) {
     throw new Error("E-mail já está em uso.");
   }
 
+  const hashed = await hashPassword(password);
+
   const newUser = {
     id: users.length + 1,
     name,
     email,
-    password,
+    password: hashed,
   };
 
   users.push(newUser);
 
-  // retorna apenas os dados públicos
-  return {
+  // Gera token
+  const token = generateToken({
     id: newUser.id,
-    name: newUser.name,
     email: newUser.email,
+    name: newUser.name,
+  });
+
+  return {
+    user: {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+    },
+    token,
   };
 }

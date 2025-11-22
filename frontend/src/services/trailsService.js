@@ -1,7 +1,7 @@
 import { getJSON, postJSON, putJSON, deleteJSON } from './api';
 
 // Buscar trilhas
-export async function fetchTrails() {
+export function fetchTrails() {
   return getJSON('/trails');
 }
 
