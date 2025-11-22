@@ -5,7 +5,16 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
  */
 async function request(url, options = {}) {
   try {
-    const res = await fetch(`${API}${url}`, options);
+    const token = localStorage.getItem('token');
+    // const res = await fetch(`${API}${url}`, options);
+    const res = await fetch(`${API}${url}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.headers || {}),
+        ...(token ? { Authorization: 'Bearer ' + token } : {}),
+      },
+    });
 
     // Intercepta erros HTTP (como 401, 404, 500)
     if (!res.ok) {

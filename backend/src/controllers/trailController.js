@@ -194,7 +194,7 @@ export function updateTrail(req, res) {
 
 export const deleteTrail = (req, res) => {
   const { id } = req.params;
-  const userId = req.headers["x-user-id"];
+  const userId = req.user.id;
 
   const index = trails.findIndex((t) => t.id === id);
 

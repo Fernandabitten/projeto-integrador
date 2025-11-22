@@ -39,6 +39,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
     navigate('/login');
   };
@@ -56,13 +57,18 @@ function App() {
       } else {
         const res = await login(data);
 
-        setUser(res.data);
+        const { user, token } = res.data;
+
+        // salva no estado
+        setUser(user);
         setIsAuthenticated(true);
 
+        // salva no localStorage
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', token);
         localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('user', JSON.stringify(res.data));
 
-        toast.success(`Bem-vindo(a), ${capitalizeWords(res.data.name)}!`);
+        toast.success(`Bem-vindo(a), ${capitalizeWords(user.name)}!`);
         navigate('/home');
       }
     } catch (error) {
