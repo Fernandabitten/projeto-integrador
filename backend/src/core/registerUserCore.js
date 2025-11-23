@@ -1,27 +1,31 @@
+import { prisma } from "../lib/prisma.js";
 import { hashPassword, generateToken } from "../utils/auth.js";
 
-export async function registerUserCore(users, { name, email, password }) {
+export async function registerUserCore(data) {
+  const { name, email, password } = data;
+
   if (!name || !email || !password) {
     throw new Error("Todos os campos são obrigatórios.");
   }
 
-  const userExists = users.find((u) => u.email === email);
+  const userExists = await prisma.user.findUnique({
+    where: { email },
+  });
+
   if (userExists) {
     throw new Error("E-mail já está em uso.");
   }
 
   const hashed = await hashPassword(password);
 
-  const newUser = {
-    id: users.length + 1,
-    name,
-    email,
-    password: hashed,
-  };
+  const newUser = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashed,
+    },
+  });
 
-  users.push(newUser);
-
-  // Gera token
   const token = generateToken({
     id: newUser.id,
     email: newUser.email,

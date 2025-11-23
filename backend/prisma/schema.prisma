@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  trails    Trail[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trail {
+  id          Int       @id @default(autoincrement())
+  name        String
+  state       String
+  city        String
+  description String
+  difficulty  String
+  distance    Float
+  gpxUrl      String?
+  photos      Photo[]
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  url       String
+  path      String
+  trailId   Int
+  trail     Trail    @relation(fields: [trailId], references: [id])
+  createdAt DateTime @default(now())
+}
