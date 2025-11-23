@@ -1,13 +1,14 @@
+import { prisma } from "../lib/prisma.js";
 import { comparePassword } from "../utils/auth.js";
 
-export async function loginUserCore(users, data) {
-  const { email, password } = data;
-
+export async function loginUserCore({ email, password }) {
   if (!email || !password) {
     throw new Error("E-mail e senha são obrigatórios.");
   }
 
-  const user = users.find((u) => u.email === email);
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
 
   if (!user) {
     throw new Error("Usuário não encontrado.");
@@ -16,10 +17,7 @@ export async function loginUserCore(users, data) {
   const isMatch = await comparePassword(password, user.password);
 
   if (!isMatch) {
-    return {
-      status: 401,
-      message: "Senha incorreta.",
-    };
+    throw new Error("Senha incorreta.");
   }
 
   return {
