@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { LogOut, Settings, User, SunMoon } from 'lucide-react';
+import { Navigate, useNavigate } from "react-router-dom";
+
 
 export default function AvatarMenu({ handleLogout }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
 
   return (
     <nav className="relative">
@@ -25,10 +29,10 @@ export default function AvatarMenu({ handleLogout }) {
           {/* Item: Editar Perfil */}
           <button
             className="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100"
-            onClick={() => alert('Editar Perfil')}
+            onClick={() => navigate("/edit-profile")}
             role="menuitem"
-          >
-            <User className="w-4 h-4 mr-2" />
+>
+          <User className="w-4 h-4 mr-2" />
             Editar Perfil
           </button>
 

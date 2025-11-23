@@ -10,6 +10,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthForm from './components/AuthForm';
 import TrailFormModal from './components/TrailFormModal';
 import ScrollToTop from './components/ScrollToTop';
+import EditProfile from "./pages/EditProfile";
+
 
 function App() {
   const mainRef = useRef(null);
@@ -149,6 +151,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Rota Editar Perfil */}
+          <Route 
+            path="/edit-profile" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <EditProfile />
+              </ProtectedRoute>
+          }
+        />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/login" replace />} />

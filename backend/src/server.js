@@ -10,8 +10,25 @@ const PORT = 3000;
 
 // Middleware para permitir JSON no corpo das requisições
 app.use(express.json());
+
 //permitir requisições de origens diferentes
-app.use(cors());
+// === CORS CONFIG CORRETA PARA USAR COOKIES/SESSÕES ===
+app.use(cors({
+  origin: "http://localhost:5173", // endereço do seu frontend
+  credentials: true               // permite enviar cookies/sessão
+}));
+
+// Headers adicionais para evitar erro no preflight OPTIONS
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
+
+// Logger
 app.use(logger);
 
 //Rota teste
