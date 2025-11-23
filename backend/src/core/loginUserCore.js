@@ -1,7 +1,9 @@
 import { prisma } from "../lib/prisma.js";
 import { comparePassword } from "../utils/auth.js";
 
-export async function loginUserCore({ email, password }) {
+export async function loginUserCore(data) {
+  const { email, password } = data;
+
   if (!email || !password) {
     throw new Error("E-mail e senha são obrigatórios.");
   }

@@ -1,7 +1,9 @@
 import { prisma } from "../lib/prisma.js";
 import { hashPassword, generateToken } from "../utils/auth.js";
 
-export async function registerUserCore({ name, email, password }) {
+export async function registerUserCore(data) {
+  const { name, email, password } = data;
+
   if (!name || !email || !password) {
     throw new Error("Todos os campos são obrigatórios.");
   }
