@@ -3,6 +3,8 @@ import {
   uploadPhotoStream,
   uploadFileStream,
 } from "../services/uploadService.js";
+import { calculateDistance } from "../utils/gpxUtils.js";
+import fs from "fs/promises"; //  Necessário para a limpeza do arquivo temporário
 
 function toTitleCase(str) {
   if (!str) return "";
@@ -54,15 +56,30 @@ function validatePayload(payload) {
 }
 
 export async function createTrailFullCore(req) {
-  // 1️⃣ Parse + validação
+  // Parse + validação
   const data = parsePayload(req.body);
   validatePayload(data);
 
   const { name, state, city, description, difficulty, distance, userId } = data;
 
+  const gpxFiles = req.files?.gpx || [];
+  let finalDistance = Number(distance) || 0;
+  let gpxTempPath = null;
+
+  if (gpxFiles.length > 0) {
+    gpxTempPath = gpxFiles[0].path; // Salva o caminho temporário
+
+    // Calcula a distância.
+    const calculated = await calculateDistance(gpxTempPath);
+
+    if (calculated > 0) {
+      finalDistance = calculated;
+    }
+  }
+
   const formattedName = toTitleCase(name);
 
-  // 2️⃣ Criar trilha
+  // Criar trilha
   const trail = await prisma.trail.create({
     data: {
       name: formattedName,
@@ -70,19 +87,19 @@ export async function createTrailFullCore(req) {
       city,
       description,
       difficulty,
-      distance: Number(distance) || 0,
+      distance: finalDistance, // Usando a distância CALCULADA
       userId: Number(userId),
     },
   });
 
   const trailId = String(trail.id);
 
-  // 3️⃣ Upload das fotos
+  // Upload das fotos
   const photosFiles = req.files?.photos || [];
   const photosData = [];
 
   for (const file of photosFiles) {
-    const uploaded = await uploadPhotoStream(trailId, file); // retorna { url, path }
+    const uploaded = await uploadPhotoStream(trailId, file);
     photosData.push({
       url: uploaded.url,
       path: uploaded.path,
@@ -94,11 +111,11 @@ export async function createTrailFullCore(req) {
     await prisma.photo.createMany({ data: photosData });
   }
 
-  // 4️⃣ Upload GPX
+  // Upload GPX
   let gpxUrl = null;
-  const gpxFiles = req.files?.gpx || [];
 
   if (gpxFiles.length > 0) {
+    // Primeiro faz o upload (usando o caminho que ainda existe)
     const uploadedGpx = await uploadFileStream(trailId, gpxFiles[0]);
     gpxUrl = uploadedGpx.url;
 
@@ -106,9 +123,19 @@ export async function createTrailFullCore(req) {
       where: { id: Number(trailId) },
       data: { gpxUrl },
     });
+
+    // Limpeza final do GPX
+    if (gpxTempPath) {
+      try {
+        await fs.unlink(gpxTempPath); // Deleta o arquivo temporário APÓS o upload
+      } catch (e) {
+        // Apenas loga o erro, não falha a transação se a limpeza falhar
+        console.warn("⚠️ Erro ao limpar arquivo temporário do GPX:", e.message);
+      }
+    }
   }
 
-  // 5️⃣ Retornar trilha completa
+  // Retorna a trilha completa
   const fullTrail = await prisma.trail.findUnique({
     where: { id: Number(trailId) },
     include: { photos: true },
