@@ -112,6 +112,7 @@ const MyTrails = ({ handleLogout }) => {
       setTrailToDelete(null);
       toast.success('Trilha excluída com sucesso!');
     } catch (err) {
+      console.error('Erro ao excluir trilha:', err);
       toast.error('Erro ao excluir trilha.');
       setDialogOpen(false);
     }

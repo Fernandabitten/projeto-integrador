@@ -1,101 +1,77 @@
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-/**
- * Função auxiliar genérica para lidar com requisições e erros
- */
 async function request(url, options = {}) {
   try {
     const token = localStorage.getItem('token');
-    // const res = await fetch(`${API}${url}`, options);
+
+    // Não forçar Content-Type quando body for FormData
+    const headers = { ...(options.headers || {}) };
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+    }
+    if (token) headers.Authorization = 'Bearer ' + token;
+
     const res = await fetch(`${API}${url}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options.headers || {}),
-        ...(token ? { Authorization: 'Bearer ' + token } : {}),
-      },
+      headers,
     });
 
-    // Intercepta erros HTTP (como 401, 404, 500)
     if (!res.ok) {
       let errorMessage = `Erro ${res.status}`;
-
       try {
-        // Tenta ler a mensagem JSON vinda do backend
         const errorData = await res.json();
-        errorMessage = errorData.message || errorMessage;
+        errorMessage = errorData.message || errorData.error || errorMessage;
       } catch {
-        // Caso o backend não mande JSON
-        errorMessage = res.statusText || errorMessage;
+        // Ignorar erro ao tentar fazer parse do JSON de erro
       }
-
-      // Caso o status seja 401 → sessão expirada / não autorizado
       if (res.status === 401) {
         console.warn('⚠️ Sessão expirada ou login inválido.');
-        // TODO:
-        // - Redirecionar para /login
-        // - Apagar o token salvo no localStorage
       }
-      // Lança sempre um Error com a mensagem correta
       throw new Error(errorMessage);
     }
 
-    // Se tudo deu certo, retorna o JSON
     return res.json();
   } catch (err) {
     console.error('Erro na requisição:', err.message);
-    throw err; // repassa o erro para o App.jsx
+    throw err;
   }
 }
 
-/**
- * POST JSON — envia dados no corpo da requisição
- */
-export async function postJSON(url, body, token) {
+export async function postJSON(url, body) {
   return request(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: 'Bearer ' + token } : {}),
-    },
     body: JSON.stringify(body),
   });
 }
 
-/**
- * GET JSON — busca dados da API
- */
-export async function getJSON(url, token) {
+export async function postForm(url, formData) {
   return request(url, {
-    headers: {
-      ...(token ? { Authorization: 'Bearer ' + token } : {}),
-    },
+    method: 'POST',
+    body: formData, // headers deliberately left to fetch
   });
 }
 
-/**
- * PUT JSON — atualiza um registro
- */
-export async function putJSON(url, body, token) {
+export async function getJSON(url) {
+  return request(url);
+}
+
+export async function putJSON(url, body) {
   return request(url, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: 'Bearer ' + token } : {}),
-    },
     body: JSON.stringify(body),
   });
 }
 
-/**
- * DELETE JSON — remove um registro
- */
-export async function deleteJSON(url, userId, token) {
+export async function putForm(url, formData) {
+  return request(url, {
+    method: 'PUT',
+    body: formData,
+  });
+}
+
+export async function deleteJSON(url, userId) {
   return request(url, {
     method: 'DELETE',
-    headers: {
-      ...(token ? { Authorization: 'Bearer ' + token } : {}),
-      'x-user-id': userId,
-    },
+    headers: { 'x-user-id': userId },
   });
 }
