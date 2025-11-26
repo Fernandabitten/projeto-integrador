@@ -31,3 +31,16 @@ export async function loginUser(req, res) {
     return sendError(res, 400, err.message);
   }
 }
+
+// ===========================
+//   POST /auth/update
+// ===========================
+export async function updateUser(req, res) {
+  try {
+    console.log("updateUser chamado:", req.body);
+
+    return sendSuccess(res, 200, { message: "Usuário atualizado com sucesso" });
+  } catch (err) {
+    return sendError(res, 400, err.message);
+  }
+}

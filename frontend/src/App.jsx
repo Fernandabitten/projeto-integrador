@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthForm from './components/AuthForm';
 import TrailFormModal from './components/TrailFormModal';
 import ScrollToTop from './components/ScrollToTop';
+import EditarCadastro from './pages/UpdateUser';
 
 function App() {
   const mainRef = useRef(null);
@@ -151,7 +152,12 @@ function App() {
           />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/editar-cadastro" replace />} />
+        </Routes>
+
+            {/* Editar cadastro */}
+          <Routes>
+            <Route path="/editar-cadastro" element={<EditarCadastro />} />
         </Routes>
       </main>
 
