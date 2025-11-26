@@ -4,7 +4,23 @@ import * as trailController from "../controllers/trailController.js";
 import multer from "multer";
 
 const router = Router();
-const upload = multer({ dest: "uploads/" }); // diretório temporário
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    // Mantém o nome aleatório do Multer, mas adiciona a extensão original
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    // Extrai a extensão do nome original do arquivo
+    const extension = file.originalname.split(".").pop();
+
+    // Nome do arquivo com extensão: ex: 1732551484-91234.gpx
+    cb(null, file.fieldname + "-" + uniqueSuffix + "." + extension);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/", authMiddleware, trailController.listTrails);
 router.delete("/:id", authMiddleware, trailController.deleteTrail);

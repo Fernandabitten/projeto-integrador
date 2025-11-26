@@ -4,11 +4,13 @@ import {
   uploadFileStream,
   deleteFromSupabase,
 } from "../services/uploadService.js";
+import { calculateDistance } from "../utils/gpxUtils.js";
+import fs from "fs/promises"; // Necessário para a limpeza do arquivo temporário
 
 const BUCKET = process.env.SUPABASE_BUCKET;
 
 /* -----------------------------
-   Helpers reutilizados
+    Helpers reutilizados
 ------------------------------*/
 function toTitleCase(str) {
   if (!str) return "";
@@ -44,7 +46,7 @@ function validatePayload(payload) {
 }
 
 /* -----------------------------
-   Sub-funções 
+    Sub-funções 
 ------------------------------*/
 
 async function buscarTrilhaOuErro(id) {
@@ -87,6 +89,10 @@ async function atualizarDadosBasicos(id, fields) {
 
   if (payload.name) {
     payload.name = toTitleCase(payload.name);
+  }
+
+  if (payload.distance !== undefined) {
+    payload.distance = Number(payload.distance);
   }
 
   if (Object.keys(payload).length > 0) {
@@ -135,24 +141,50 @@ function extractPathFromUrl(url, bucketName) {
   return match ? match[1] : null;
 }
 
+/**
+ * Subtitui o GPX/KML, calcula a distância e atualiza no DB, e depois limpa o arquivo temporário.
+ */
 async function substituirGpx(trail, id, req) {
   const gpxFile = req.files?.gpx?.[0];
 
   if (!gpxFile) return;
 
-  // deletar gpx antigo
+  let newDistance = null;
+  const tempPath = gpxFile.path;
+
+  // Calcular nova distância
+  const calculated = await calculateDistance(tempPath);
+  if (calculated > 0) {
+    newDistance = calculated;
+  }
+
+  // deletar gpx antigo do storage
   if (trail.gpxUrl) {
     const path = extractPathFromUrl(trail.gpxUrl, BUCKET);
     if (path) await deleteFromSupabase(path);
   }
 
-  // enviar novo
-  const uploaded = await uploadFileStream(String(id), gpxFile);
+  // enviar novo para o storage
+  const uploaded = await uploadFileStream(String(id), gpxFile); // ⬅️ Upload
+
+  const updateData = { gpxUrl: uploaded.url };
+
+  // Incluir nova distância na atualização do BD
+  if (newDistance !== null) {
+    updateData.distance = newDistance;
+  }
 
   await prisma.trail.update({
     where: { id: Number(id) },
-    data: { gpxUrl: uploaded.url },
+    data: updateData,
   });
+
+  // Limpeza final do arquivo temporário (após o upload)
+  try {
+    await fs.unlink(tempPath);
+  } catch (e) {
+    console.warn("⚠️ Erro ao limpar arquivo temporário do GPX:", e.message);
+  }
 }
 
 async function buscarTrilhaCompleta(id) {
@@ -163,7 +195,7 @@ async function buscarTrilhaCompleta(id) {
 }
 
 /* -----------------------------
-   FUNÇÃO PRINCIPAL
+    FUNÇÃO PRINCIPAL
 ------------------------------*/
 
 export async function updateTrailFullCore(req) {
@@ -178,18 +210,18 @@ export async function updateTrailFullCore(req) {
   const trail = await buscarTrilhaOuErro(id);
   validarPermissao(trail, userId);
 
-  // Atualizar texto/infos básicas
+  // 1. Atualizar texto/infos básicas
   await atualizarDadosBasicos(id, fields);
 
-  // Remover fotos
+  // 2. Remover fotos
   await removerFotos(removedPhotos);
 
-  // Upload de novas fotos
+  // 3. Upload de novas fotos
   await adicionarNovasFotos(id, req);
 
-  // Substituir GPX
+  // 4. Substituir GPX, recalcular distância e limpar arquivo temporário
   await substituirGpx(trail, id, req);
 
-  // Retornar trilha completa
+  // 5. Retornar trilha completa
   return await buscarTrilhaCompleta(id);
 }
