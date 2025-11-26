@@ -10,6 +10,8 @@ const PORT = 3000;
 
 // Middleware para permitir JSON no corpo das requisições
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 //permitir requisições de origens diferentes
 app.use(cors());
 app.use(logger);

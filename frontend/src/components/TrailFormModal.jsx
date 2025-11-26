@@ -5,37 +5,57 @@ import { NavLink } from 'react-router-dom';
 import { createTrail, updateTrail } from '../services/trailsService';
 import { getStates, getCitiesByState } from '../services/ibgeService';
 
+const MAX_PHOTOS = 10;
+
 const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
-  const MAX_PHOTOS = 10;
   const isEditing = mode === 'edit';
+
+  // ----------------------------
+  // Estados principais
+  // ----------------------------
   const [name, setName] = useState(trailData?.name || '');
   const [state, setState] = useState(trailData?.state || '');
   const [city, setCity] = useState(trailData?.city || '');
   const [description, setDescription] = useState(trailData?.description || '');
   const [difficulty, setDifficulty] = useState(trailData?.difficulty || 'Fácil');
-  const [photos, setPhotos] = useState(trailData?.photos || []); // URLs/Paths (simulados)
-  const [newPhotos, setNewPhotos] = useState([]); // File objects
-  const [gpxFile, setGpxFile] = useState(null); // File object
+  const [photos, setPhotos] = useState(trailData?.photos || []);
+  const [newPhotos, setNewPhotos] = useState([]);
+  const [gpxFile, setGpxFile] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
-  // Estados e cidades via IBGE API
+  const [removedPhotos, setRemovedPhotos] = useState([]);
+
+  // Estados da API IBGE
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [loadingCities, setLoadingCities] = useState(false);
+  const [_loadingCities, setLoadingCities] = useState(false);
 
-  // Buscar todos os estados
+  // ----------------------------
+  // Helpers
+  // ----------------------------
+  const totalPhotos = photos.length + newPhotos.length;
+  // Verifica se o GPX é obrigatório e está faltando
+  const isGpxMissing = !gpxFile && !(isEditing && trailData?.gpxUrl);
+
+  // ----------------------------
+  // Load Estados
+  // ----------------------------
   useEffect(() => {
     async function loadStates() {
       try {
         const list = await getStates();
         setStates(list);
       } catch (err) {
+        console.error(err);
         toast.error('Erro ao carregar estados');
       }
     }
     loadStates();
   }, []);
 
-  // Buscar cidades do estado selecionado
+  // ----------------------------
+  // Load Cidades ao trocar Estado
+  // ----------------------------
   useEffect(() => {
     async function loadCities() {
       if (!state) return;
@@ -45,6 +65,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
         const list = await getCitiesByState(state);
         setCities(list);
       } catch (err) {
+        console.error(err);
         toast.error('Erro ao carregar cidades');
       } finally {
         setLoadingCities(false);
@@ -53,6 +74,9 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
     loadCities();
   }, [state]);
 
+  // ----------------------------
+  // Handlers: Upload
+  // ----------------------------
   const handleFileChange = (e, fileType) => {
     const files = Array.from(e.target.files);
     if (fileType === 'photos') {
@@ -76,111 +100,99 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
       setNewPhotos(prev => [...prev, ...filesToTake]);
       e.target.value = null; // Reseta o valor do input
     } else if (fileType === 'gpx') {
-      //TODO: Aqui fazer o upload imediato (ex.Supabase) e obter os paths/urls (Diagrama de sequencia 8)
       setGpxFile(files[0]);
     }
   };
 
-  // Simula criação de um ID único (TODO: vira do back ou Supabase)
-  const generateId = () => `p-${crypto.randomUUID()}`;
-
-  // Mapeia as novas fotos para o formato esperado
-  const formattedNewPhotos = newPhotos.map((file, i) => {
-    const id = generateId();
-    const fileName = file.name.replace(/\s+/g, '_');
-    const path = `/uploads/photos/${fileName}`;
-    const url = `https://placehold.co/400x300/609072/ffffff?text=${encodeURIComponent(file.name)}`;
-    return {
-      id,
-      url,
-      path,
-      trailId: trailData?.id || `t-${crypto.randomUUID()}`,
-      createdAt: new Date().toISOString(),
-    };
-  });
-
-  const handleRemovePhoto = (index, isNew) => {
+  const handleRemovePhoto = (index, isNew, photoObj) => {
     if (isNew) {
       setNewPhotos(newPhotos.filter((_, i) => i !== index));
     } else {
-      // Simula a exclusão de uma foto existente no Storage/DB (Diagrama de sequencia 10)
+      setRemovedPhotos(prev => [...prev, photoObj.id]); // <-- registrar ID removido
       setPhotos(photos.filter((_, i) => i !== index));
     }
   };
 
+  // ----------------------------
+  // Submit
+  // ----------------------------
   const handleSubmit = async e => {
     e.preventDefault();
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const userId = storedUser?.id;
 
     const totalPhotos = photos.length + newPhotos.length;
-    // 1. Verificação Mínima de Fotos
     if (totalPhotos === 0) {
       toast.error('É obrigatório enviar pelo menos uma foto da trilha.');
-      return; // Impede a submissão
+      return;
     }
-
-    // 2. Verificação Obrigatória do Arquivo de Rota
-    const hasGpxFile = gpxFile || (isEditing && trailData?.filePath);
+    const hasGpxFile = gpxFile || (isEditing && trailData?.gpxUrl);
     if (!hasGpxFile) {
       toast.error('É obrigatório anexar um arquivo de rota (GPX/KML).');
-      return; // Impede a submissão
+      return;
     }
-
-    // Verificação Máxima de Fotos (por segurança)
     if (totalPhotos > MAX_PHOTOS) {
       toast.error(`O número máximo de fotos permitido é ${MAX_PHOTOS}.`);
-      return; // Impede a submissão
+      return;
     }
 
     setIsLoading(true);
 
-    const trailPayload = {
-      name,
-      state,
-      city,
-      description,
-      difficulty,
-      // Mescla fotos existentes com as novas editadas
-      photos: [...photos, ...formattedNewPhotos],
-      // Se houver novo arquivo, usa ele. Senão, mantém o existente se estiver editando.
-      filePath: gpxFile ? `gpx/${gpxFile.name}` : isEditing ? trailData?.filePath : null, // Se for edição, mantém o trailData.filePath se gpxFile for null
-      userId,
-      distance: 0,
-    };
-
     try {
-      let savedTrail;
+      // Monta FormData
+      const form = new FormData();
+      // os dados básicos em um campo "data" (JSON)
+      const payload = {
+        name,
+        state,
+        city,
+        description,
+        difficulty,
+        userId,
+        distance: Number(0),
+        removedPhotos,
+      };
+      form.append('data', JSON.stringify(payload));
 
+      // anexar arquivos de fotos (File objects)
+      for (const file of newPhotos) {
+        form.append('photos', file, file.name);
+      }
+
+      // anexar gpx (se tiver)
+      if (gpxFile) {
+        form.append('gpx', gpxFile, gpxFile.name);
+      }
+
+      // Se estiver editando e não enviou novo gpx, não precisa mandar gpx
+      // Também se quiser enviar fotos removidas, você poderia enviar lista de ids removidos etc.
+
+      let savedTrail;
       if (isEditing) {
-        // ATUALIZAR
-        savedTrail = await updateTrail(trailData.id, trailPayload);
+        // adaptar updateTrail para aceitar multipart (similar ao create)
+        savedTrail = await updateTrail(trailData.id, form, true); // sinaliza que é form
       } else {
-        // CRIAR
-        savedTrail = await createTrail(trailPayload);
+        savedTrail = await createTrail(form, true); // criado para aceitar FormData
       }
 
       if (onSubmit) onSubmit(savedTrail, mode);
       onClose();
     } catch (err) {
       console.error('Erro ao cadastrar trilha:', err);
-      toast.error('Erro ao cadastrar trilha: ' + err.message);
+      toast.error('Erro ao cadastrar trilha: ' + (err.message || err));
     } finally {
       setIsLoading(false);
-      onClose();
     }
   };
 
+  // ----------------------------
+  // UI
+  // ----------------------------
   const DifficultyColors = {
     Fácil: 'text-green-500 border-green-500',
     Moderado: 'text-yellow-500 border-yellow-500',
     Difícil: 'text-red-500 border-red-500',
   };
-
-  const totalPhotos = photos.length + newPhotos.length;
-  const isMaxPhotos = totalPhotos >= MAX_PHOTOS;
-  // Verifica se o GPX é obrigatório e está faltando
-  const isGpxMissing = !gpxFile && !(isEditing && trailData?.filePath);
 
   return (
     <div
@@ -296,10 +308,10 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
             </span>
             <div className="flex flex-wrap gap-3">
               {/* Fotos Existentes */}
-              {photos.map((photoUrl, index) => (
+              {photos.map((photo, index) => (
                 <div key={`existing-${index}`} className="relative">
                   <img
-                    src={photoUrl}
+                    src={photo.url}
                     alt={`Foto existente ${index + 1}`}
                     className="w-20 h-20 object-cover rounded-lg border border-green-300"
                     onError={e => {
@@ -309,7 +321,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
                   />
                   <button
                     type="button"
-                    onClick={() => handleRemovePhoto(index, false)}
+                    onClick={() => handleRemovePhoto(index, false, photo)}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 leading-none text-xs"
                   >
                     <X size={12} />
@@ -369,9 +381,7 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
             {!gpxFile && (
               <label className="flex items-center justify-center w-full p-3 border-2 border-dashed border-gray-300 text-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 transition">
                 <FileUp size={20} className="mr-2" />
-                {isEditing && trailData?.filePath
-                  ? 'Substituir Rota'
-                  : 'Anexar Rota (.gpx ou .kml)'}
+                {isEditing && trailData?.gpxUrl ? 'Substituir Rota' : 'Anexar Rota (.gpx ou .kml)'}
                 <input
                   type="file"
                   onChange={e => handleFileChange(e, 'gpx')}
@@ -380,9 +390,9 @@ const TrailFormModal = ({ mode, trailData, onClose, onSubmit }) => {
                 />
               </label>
             )}
-            {isEditing && trailData?.filePath && !gpxFile && (
+            {isEditing && trailData?.gpxUrl && !gpxFile && (
               <p className="text-sm text-gray-500">
-                Rota atual: {trailData.filePath.split('/').pop()}
+                Rota atual: {trailData.gpxUrl.split('/').pop()}
               </p>
             )}
           </div>
