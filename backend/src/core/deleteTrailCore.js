@@ -1,9 +1,11 @@
-export function deleteTrailCore(trails, id, userId) {
+// core/deleteTrailCore.js
+
+export function deleteTrailCore(trails, trailId, userId) {
   if (!userId) {
     throw new Error("Usuário não autenticado.");
   }
 
-  const index = trails.findIndex((t) => t.id === id);
+  const index = trails.findIndex((t) => t.id === trailId);
 
   if (index === -1) {
     throw new Error("Trilha não encontrada.");
@@ -12,13 +14,11 @@ export function deleteTrailCore(trails, id, userId) {
   const trail = trails[index];
 
   if (trail.userId !== userId) {
-    throw new Error("Você não tem permissão para excluir esta trilha.");
+    throw new Error("Você não pode excluir esta trilha.");
   }
 
-  // Remove a trilha
+  // Remover trilha
   trails.splice(index, 1);
 
-  return {
-    message: "Trilha excluída com sucesso.",
-  };
+  return true; // Apenas para indicar sucesso
 }

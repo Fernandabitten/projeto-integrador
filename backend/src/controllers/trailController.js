@@ -1,6 +1,8 @@
 import { sendSuccess, sendError } from "../utils/httpResponses.js";
 import { createTrailCore } from "../core/createTrailCore.js";
 import { updateTrailCore } from "../core/updateTrailCore.js";
+import { deleteTrailCore } from "../core/deleteTrailCore.js";
+
 
 // Simulação de dados de trilhas (Trail) com base no diagrama de classes
 const trails = [
@@ -194,25 +196,14 @@ export function updateTrail(req, res) {
 
 export const deleteTrail = (req, res) => {
   const { id } = req.params;
-  const userId = req.user.id;
+  const userId = req.user?.id;
 
-  const index = trails.findIndex((t) => t.id === id);
+  try {
+    deleteTrailCore(trails, id, userId);
 
-  if (index === -1) {
-    return sendError(res, 404, "Trilha não encontrada.");
+    return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
+  } catch (error) {
+    return sendError(res, 400, error.message);
   }
-
-  const trail = trails[index];
-
-  if (!userId) {
-    return sendError(res, 401, "Usuário não autenticado.");
-  }
-
-  if (trail.userId != userId) {
-    return sendError(res, 403, "Você não pode excluir esta trilha.");
-  }
-
-  trails.splice(index, 1);
-
-  return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
 };
+
