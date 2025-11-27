@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-marca.svg';
 
 const AuthForm = ({ mode, navigate, onAuth }) => {
   const [email, setEmail] = useState('');

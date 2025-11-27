@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Star, LogOut, BadgeInfo } from 'lucide-react';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-marca.svg';
 
 const Sidebar = () => {
   const location = useLocation();
