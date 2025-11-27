@@ -1,5 +1,3 @@
-// core/deleteTrailCore.js
-
 export function deleteTrailCore(trails, trailId, userId) {
   if (!userId) {
     throw new Error("Usuário não autenticado.");
@@ -20,5 +18,5 @@ export function deleteTrailCore(trails, trailId, userId) {
   // Remover trilha
   trails.splice(index, 1);
 
-  return true; // Apenas para indicar sucesso
+  return true; 
 }
