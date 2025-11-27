@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { X, ArrowLeft, ArrowRight, MapPin, Mountain, Ruler } from 'lucide-react';
 
 const TrailDetailsModal = ({ trail, onClose }) => {
+  const [currentImage, setCurrentImage] = useState(0);
   if (!trail) return null;
 
   const photos = trail.photos || [];
-  const [currentImage, setCurrentImage] = useState(0);
 
   const nextImage = () => {
     setCurrentImage(prev => (prev + 1) % photos.length);
@@ -114,12 +115,19 @@ const TrailDetailsModal = ({ trail, onClose }) => {
         </section>
 
         {/* Botão Ver mapa */}
-        <button
-          className="w-full mt-5 bg-lime-400 hover:bg-lime-500 text-green-900 font-semibold py-2 rounded-xl transition"
-          aria-label="Ver mapa da trilha"
+        <Link
+          to={`/trilhas/${trail.id}/mapa`}
+          state={{ trail }}
+          className="text-blue-600 underline"
         >
-          Ver mapa da Trilha
-        </button>
+          <button
+            className="w-full mt-5 bg-lime-400 hover:bg-lime-500 text-green-900 font-semibold py-2 rounded-xl transition"
+            aria-label="Ver mapa da trilha"
+          >
+            {/* Ver mapa da Trilha */}
+            Ver mapa
+          </button>
+        </Link>
       </aside>
     </div>
   );
