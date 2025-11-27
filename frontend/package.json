@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",
+    "leaflet": "^1.9.4",
+    "leaflet-gpx": "^2.2.0",
     "lucide-react": "^0.552.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
