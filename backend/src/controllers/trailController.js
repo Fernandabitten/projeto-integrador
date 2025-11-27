@@ -1,6 +1,7 @@
 import { sendSuccess, sendError } from "../utils/httpResponses.js";
 import { createTrailCore } from "../core/createTrailCore.js";
 import { updateTrailCore } from "../core/updateTrailCore.js";
+import { deleteTrailCore } from "../core/deleteTrailCore.js";
 import { createTrailFullCore } from "../core/createTrailFullCore.js";
 import { updateTrailFullCore } from "../core/updateTrailFullCore.js";
 import { prisma } from "../lib/prisma.js";
@@ -47,66 +48,12 @@ export const deleteTrail = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
 
-    const trail = await prisma.trail.findUnique({
-      where: { id: Number(id) },
-      include: {
-        photos: true,
-      },
-    });
-
-    if (!trail) return sendError(res, 404, "Trilha não encontrada.");
-    if (trail.userId !== userId)
-      return sendError(res, 403, "Você não pode excluir esta trilha.");
-
-    // ----------------------------------------------
-    // Deletar FOTOS do Storage Supabase
-    // ----------------------------------------------
-    for (const photo of trail.photos) {
-      if (photo.path) {
-        try {
-          await deleteFromSupabase(photo.path);
-        } catch (err) {
-          console.warn("⚠️ Erro ao excluir foto do Supabase:", err.message);
-        }
-      }
-    }
-
-    // ----------------------------------------------
-    // Deletar arquivo GPX/KML
-    // ----------------------------------------------
-    function extractPathFromUrl(url, bucketName) {
-      if (!url) return null;
-      const regex = new RegExp(`^.*?/${bucketName}/(.*)$`);
-      const match = url.match(regex);
-      return match ? match[1] : null;
-    }
-
-    if (trail.gpxUrl) {
-      const gpxPathToDelete = extractPathFromUrl(trail.gpxUrl, BUCKET);
-
-      if (gpxPathToDelete) {
-        try {
-          await deleteFromSupabase(gpxPathToDelete);
-        } catch (err) {
-          console.warn("⚠️ Erro ao excluir GPX do Supabase:", err.message);
-        }
-      } else {
-        console.warn(
-          "⚠️ Não foi possível extrair o caminho interno do GPX URL."
-        );
-      }
-    }
-
-    // ----------------------------------------------
-    // Remover registros do DB
-    // ----------------------------------------------
-    await prisma.photo.deleteMany({ where: { trailId: trail.id } });
-    await prisma.trail.delete({ where: { id: trail.id } });
+    await deleteTrailCore(id, userId);
 
     return sendSuccess(res, 200, null, "Trilha deletada com sucesso.");
   } catch (err) {
     console.error(err);
-    return sendError(res, 500, "Erro ao deletar trilha.");
+    return sendError(res, 400, err.message || "Erro ao deletar trilha.");
   }
 };
 
