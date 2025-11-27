@@ -152,7 +152,7 @@ function App() {
           />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/editar-cadastro" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
 
             {/* Editar cadastro */}
