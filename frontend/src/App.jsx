@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import MyTrails from './pages/MyTrails';
 import About from './pages/About';
+import TrailMapPage from './pages/TrailMapPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthForm from './components/AuthForm';
 import TrailFormModal from './components/TrailFormModal';
@@ -15,7 +16,7 @@ function App() {
   const mainRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -146,6 +147,15 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <About handleLogout={handleLogout} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/trilhas/:id/mapa"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <TrailMapPage handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
