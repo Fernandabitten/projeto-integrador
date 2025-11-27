@@ -1,18 +1,26 @@
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TrailMap from '../components/TrailMap';
+import ElevationChart from '../components/ElevationChart';
 import AvatarMenu from '../components/AvatarMenu';
-import { MapPin, Mountain, Ruler } from 'lucide-react';
+import { MapPin, Mountain, Ruler, ChevronDown } from 'lucide-react';
 
 export default function TrailMapPage({ handleLogout }) {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { trail } = state || {};
 
-  if (!trail) {
+  // Estado para os dados de elevação (recebidos do TrailMap)
+  const [elevationData, setElevationData] = useState([]);
+
+  // Estado para o card expansível
+  const [isElevationExpanded, setIsElevationExpanded] = useState(true); // Começa expandido por padrão
+
+  if (!trail || !trail.gpxUrl) {
     return (
       <main className="p-4">
         <p className="text-red-600 font-semibold" role="alert">
-          Erro: dados da trilha não foram enviados.
+          Erro: Dados da trilha ou URL do GPX não foram fornecidos.
         </p>
       </main>
     );
@@ -58,7 +66,7 @@ export default function TrailMapPage({ handleLogout }) {
             <li className="flex items-center">
               <Mountain className="h-4 w-4 text-amber-600 mr-1" aria-hidden="true" />
               <span>
-                Dificuldade: <strong>{trail.difficulty}</strong>
+                Dificuldade: <strong>{trail.difficulty || '-'}</strong>
               </span>
             </li>
 
@@ -66,7 +74,7 @@ export default function TrailMapPage({ handleLogout }) {
             <li className="flex items-center">
               <Ruler className="h-4 w-4 text-blue-600 mr-1" aria-hidden="true" />
               <span>
-                Distância: <strong>{trail.distance} km</strong>
+                Distância: <strong>{trail.distance || '-'} km</strong>
               </span>
             </li>
           </ul>
@@ -74,7 +82,7 @@ export default function TrailMapPage({ handleLogout }) {
 
         {/* Card do mapa */}
         <section
-          className="bg-white shadow-lg sm:shadow-xl rounded-xl p-3 sm:p-4"
+          className="bg-white shadow-lg sm:shadow-xl rounded-xl p-3 sm:p-4 mb-6"
           aria-labelledby="map-title"
         >
           <h2
@@ -84,6 +92,7 @@ export default function TrailMapPage({ handleLogout }) {
             Visualização da Rota
           </h2>
 
+          {/* Container do Mapa com altura fixa */}
           <div
             className="
               relative w-full overflow-hidden rounded-xl 
@@ -92,7 +101,42 @@ export default function TrailMapPage({ handleLogout }) {
             role="region"
             aria-label="Mapa com a rota da trilha"
           >
-            <TrailMap gpxUrl={trail.gpxUrl} />
+            {/* O TrailMap envia os dados de elevação via onDataExtracted */}
+            <TrailMap gpxUrl={trail.gpxUrl} onDataExtracted={setElevationData} />
+          </div>
+        </section>
+
+        {/* Card do Gráfico de Elevação (Expansível) */}
+        <section
+          className="bg-white shadow-lg sm:shadow-xl rounded-xl"
+          aria-labelledby="elevation-chart-title"
+        >
+          {/* Botão de Título/Expansão */}
+          <button
+            className="w-full flex justify-between items-center p-3 sm:p-4 text-left hover:bg-gray-50 transition rounded-xl"
+            onClick={() => setIsElevationExpanded(!isElevationExpanded)}
+            aria-expanded={isElevationExpanded}
+            aria-controls="elevation-chart-content"
+          >
+            <h2 id="elevation-chart-title" className="text-lg font-semibold text-gray-700">
+              Gráfico de Elevação
+            </h2>
+            {/* Ícone de expansão/recolhimento */}
+            <ChevronDown
+              className={`h-6 w-6 text-gray-500 transition-transform duration-300 ${isElevationExpanded ? 'rotate-180' : 'rotate-0'}`}
+              aria-hidden="true"
+            />
+          </button>
+
+          {/* Conteúdo do gráfico */}
+          <div
+            id="elevation-chart-content"
+            className={`transition-all duration-500 overflow-hidden ${isElevationExpanded ? 'max-h-[500px]' : 'max-h-0'}`}
+          >
+            <div className="p-3 sm:p-4 border-t border-gray-200">
+              {/* Renderiza o ElevationChart usando os dados extraídos */}
+              <ElevationChart data={elevationData} />
+            </div>
           </div>
         </section>
 
