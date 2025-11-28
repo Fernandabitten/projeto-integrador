@@ -1,5 +1,4 @@
 import { jest } from "@jest/globals";
-const { jest, describe, it, expect } = pkg;
 
 // =====================================================
 // 1. DEFINIR VARIÁVEIS DE AMBIENTE (ANTES DE TUDO)
