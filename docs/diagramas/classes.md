@@ -1,3 +1,5 @@
+
+```mermaid
 classDiagram
 direction TB
     class User {
@@ -40,6 +42,6 @@ direction TB
     User "1" --> "many" Trail : cria >
     Trail "1" --> "many" Photo : possui >
     Trail "1" --> "1" File : possui >
-
+```
 
 **Atualizado em:** 🗓️ *31/10/2025* — **Ricardo**
