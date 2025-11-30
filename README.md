@@ -1,4 +1,4 @@
-# 🌍 Trilha Conectada
+# <img src="https://github.com/Fernandabitten/projeto-integrador/blob/main/frontend/src/assets/logo-marca.svg" width="80" style=" top: -6px;"> <span style="position: relative; top: -6px;">Trilha Conectada</span>
 
 Trilha Conectada é uma aplicação web fullstack para **compartilhamento, visualização e gestão de trilhas de aventura**. Usuários podem fazer upload de arquivos GPX, visualizar as estatísticas da trilha em um mapa interativo e interagir com a comunidade.
 
