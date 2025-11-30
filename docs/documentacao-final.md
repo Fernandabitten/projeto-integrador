@@ -9,7 +9,7 @@
 ---
 
 # Sumário
-1. [Introdução](#1-introdução)  
+1. [Introdução](#1-introdução)
 2. [Visão Geral do Sistema](#2-visão-geral-do-sistema)  
 3. [Requisitos do Sistema](#3-requisitos-do-sistema)  
 4. [Arquitetura e Tecnologias Utilizadas](#4-arquitetura-e-tecnologias-utilizadas)  
@@ -22,9 +22,7 @@
 11. [Referências](#11-referências)
 
 ---
-
 # 1. Introdução
-
 ## 1.1 Objetivo do Documento
 Este documento reúne toda a documentação técnica e de usuário do sistema **Trilha Conectada**, desenvolvido como parte da disciplina Projeto Integrador 2. 
 Seu objetivo é permitir que desenvolvedores, professores e avaliadores compreendam como o sistema funciona, sua arquitetura, requisitos, tecnologias usadas, estrutura interna e modo de utilização. Também fornece instruções de instalação e execução, além de registrar decisões de projeto e apresentar os testes unitários desenvolvidos no backend.
@@ -61,7 +59,6 @@ O projeto foi pensado para ser simples, acessível e útil tanto para trilheiros
 - Permite editar e remover trilhas   
 
 ### O que NÃO faz (fora do escopo):
-- Mapa interativo das trilhas  
 - Compartilhamento público de trilhas  
 - Sistema de comentários  
 - Integração com redes sociais  
@@ -69,24 +66,7 @@ O projeto foi pensado para ser simples, acessível e útil tanto para trilheiros
 ---
 
 # 3. Requisitos do Sistema
-
-## 3.1 Requisitos Funcionais
-- **RF01:** O sistema deve permitir cadastrar usuários.  
-- **RF02:** O sistema deve permitir login com email e senha.  
-- **RF03:** O usuário autenticado deve poder cadastrar trilhas.  
-- **RF04:** O usuário deve poder enviar fotos e arquivo GPX da trilha.  
-- **RF05:** O sistema deve permitir listar trilhas cadastradas.  
-- **RF06:** O sistema deve permitir editar trilhas existentes.  
-- **RF07:** O sistema deve permitir excluir trilhas cadastradas.  
-- **RF08:** O sistema deve impedir que um usuário exclua trilhas de outro usuário.  
-
-## 3.2 Requisitos Não Funcionais
-- **RNF01:** O sistema deve utilizar banco SQLite via Prisma.  
-- **RNF02:** O backend deve seguir arquitetura REST.  
-- **RNF03:** A interface deve ser responsiva.  
-- **RNF04:** A aplicação deve utilizar autenticação JWT.  
-- **RNF05:** O sistema deve utilizar Supabase Storage para arquivos.  
-- **RNF06:** O tempo de resposta deve ser inferior a 2 segundos para operações comuns.  
+## [→ Ver arquivo requisitos.md](./requisitos.md)
 
 ---
 
@@ -102,24 +82,69 @@ O **Trilha Conectada** utiliza arquitetura **cliente-servidor**, onde:
 ## 4.2 Tecnologias Utilizadas
 
 ### **Frontend**
-- React  
-- Vite  
-- Axios  
-- React Router  
-- CSS Modules  
+
+A aplicação frontend é construída com React e Vite, utilizando TailwindCSS para estilização e bibliotecas adicionais para gráficos, mapas e navegação:
+
+- **Frameworks e Ferramentas**
+  - React `^19.1.1`
+  - React DOM `^19.1.1`
+  - Vite `^7.1.7`
+  - TailwindCSS `^4.1.16`
+  - Lucide React `^0.552.0`
+
+- **Visualização e Mapas**
+  - ApexCharts `^5.3.6`
+  - React ApexCharts `^1.8.0`
+  - Leaflet `^1.9.4`
+  - Leaflet GPX `^2.2.0`
+
+- **Navegação e Experiência**
+  - React Router DOM `^7.9.5`
+  - React Hot Toast `^2.4.1`
+
+- **Estilo e Qualidade de Código**
+  - Prettier `^3.6.2`
+  - ESLint `^9.36.0`
+  - eslint-plugin-react-hooks `^5.2.0`
+  - eslint-plugin-react-refresh `^0.4.22`
+
+- **Scripts disponíveis**
+  - `dev`, `build`, `preview`, `lint`, `format`, `format:check`
+
+---
 
 ### **Backend**
-- Node.js  
-- Express  
-- Prisma ORM  
-- SQLite  
-- Multer (upload local antes de enviar ao Supabase)  
-- Supabase Storage  
-- JWT  
-- Bcrypt  
+
+O backend é construído com Node.js e Express, utilizando Prisma ORM e integração com Supabase para armazenamento de arquivos e autenticação:
+
+- **Frameworks e Ferramentas**
+  - Node.js
+  - Express `^5.1.0`
+  - Prisma ORM `^6.19.0`
+  - Supabase JS `^2.84.0`
+  - Multer `^2.0.2`
+
+- **Autenticação e Segurança**
+  - JWT `^9.0.2`
+  - BcryptJS `^3.0.3`
+  - dotenv `^17.2.3`
+
+- **Geolocalização e GPX**
+  - @mapbox/togeojson `^0.16.2`
+  - @turf/turf `^7.3.0`
+  - xml2js `^0.6.2`
+  - xmldom `^0.6.0`
+
+- **Testes e Desenvolvimento**
+  - Jest `^30.2.0`
+  - Nodemon `^3.1.10`
+
+- **Scripts disponíveis**
+  - `dev`, `start`, `test`
+
 
 ## 4.3 Padrões e Boas Práticas Adotados
-- Arquitetura em camadas no backend (routes, controllers, core, utils).  
+- Arquitetura em camadas no backend (routes, controllers, core, services, prisma, banco).  
 - Componentização no frontend.  
 - Nomes de variáveis semânticos.  
 - Separação entre lógica de negócio (core) e lógica HTTP (controllers).  
@@ -129,54 +154,14 @@ O **Trilha Conectada** utiliza arquitetura **cliente-servidor**, onde:
 
 # 5. Diagramas do Sistema
 
-## 5.1 Diagrama de Casos de Uso (Mermaid)
-```mermaid
-usecaseDiagram
-actor Usuario
-Usuario --> (Cadastrar trilha)
-Usuario --> (Listar trilhas)
-Usuario --> (Editar trilha)
-Usuario --> (Excluir trilha)
-Usuario --> (Fazer login)
-Usuario --> (Cadastrar usuário)
-```
+## 5.1 Diagrama de Casos de Uso
+### [→ Ver Diagrama de Casos de Uso](./diagramas/casos-uso.md)
 
 ## 5.2 Diagrama de Classes (Modelo de Dados)
-```mermaid
-classDiagram
-class User {
-  Int id
-  String name
-  String email
-  String password
-}
-class Trail {
-  Int id
-  String name
-  String city
-  String state
-  String difficulty
-  Float distance
-}
-class Photo {
-  Int id
-  String url
-  String path
-}
-User --> Trail : cria
-Trail --> Photo : possui
-```
+### [→ Ver Diagrama de Classes](./diagramas/classes.md)
 
-## 5.3 Diagrama de Sequência – Criar Trilha
-```mermaid
-sequenceDiagram
-User ->> Frontend: Preenche formulário
-Frontend ->> Backend: POST /trails
-Backend ->> Prisma: Salvar trilha
-Prisma -->> Backend: Trilha salva
-Backend -->> Frontend: Sucesso
-Frontend -->> User: Trilha cadastrada
-```
+## 5.2 Diagrama de sequência
+### [→ Ver Diagrama de sequência](./diagramas/sequencia.md)
 
 ---
 
@@ -185,24 +170,99 @@ Frontend -->> User: Trilha cadastrada
 ## 6.1 Organização das Pastas
 ### **Backend**
 ```
-/backend
-  /src
-    /routes
-    /controllers
-    /core
-    /middlewares
-    /services
-  package.json
+backend/
+├── prisma/
+│   ├── schema.prisma             # Modelo do banco de dados SQLite
+│   └── migrations/               # Histórico das migrações Prisma
+├── src/
+│   ├── controllers/
+│   │   ├── authController.js     # Lida com login e cadastro de usuários
+│   │   └── trailController.js    # Lida com CRUD completo das trilhas
+│   │
+│   ├── middlewares/
+│   │   └── authMiddleware.js      # Middleware JWT: valida token e protege rotas
+│   │
+│   ├── routes/
+│   │   ├── authRoutes.js          # Rotas de autenticação (/auth)
+│   │   └── trailRoutes.js         # Rotas de trilhas (/trails)
+│   │
+│   ├── services/
+│   │   ├── uploadService.js       # Upload de fotos e arquivos GPX/KML para storage
+│   │   └── userService.js         # Regras de negócio de usuários (se houver)
+│   │
+│   ├── utils/
+│   │   ├── auth.js            # contém a lógica central para a gestão de usuários e segurança no projeto.
+│   │   └── httpResponses.js   # módulo utilitário que tem a função de padronizar e centralizar a forma como a API do backend responde a qualquer requisição.
+│   │   └── gpxUtils.js          # transforma o arquivo de trilha em dados utilizáveis pela aplicação
+│   │
+│   ├── lib/
+│   │   └── prisma.js              # Inicialização do cliente Prisma
+│   │
+│   └── server.js                  # Inicializa o servidor Node e configuração principal do Express
+│
+├── test/                          # Testes automatizados (Jest)
+│
+├── uploads/                       # Arquivos temporários usados pelo multer
+│
+└── README.md                      # Documentação do backend
+
+
 ```
 
 ### **Frontend**
 ```
-/frontend
-  /src
-    /components
-    /pages
-    /services
-  package.json
+frontend/
+├── src/
+│   ├── assets/                       # Imagens, ícones, fontes
+│
+│   ├── components/
+│   │   ├── AuthForm.jsx              # Formulário de login/cadastro
+│   │   ├── AvatarMenu.jsx            # Menu do usuário logado
+│   │   ├── ConfirmDialog.jsx         # Modal de confirmação
+│   │   ├── ElevationChart.jsx        # Gráfico de elevação da trilha
+│   │   ├── FilterBar.jsx             # Barra de filtros da listagem
+│   │   ├── ProtectedRoute.jsx        # Protege rotas baseadas em login
+│   │   ├── ScrollToTop.jsx           # Auto-scroll ao navegar
+│   │   ├── Sidebar.jsx               # Menu lateral
+│   │   ├── TrailCard.jsx             # Card da trilha na listagem
+│   │   ├── TrailDataModal.jsx        # Exibe resumo da trilha em modal
+│   │   ├── TrailFormModal.jsx        # Formulário de criação/edição
+│   │   └── TrailMap.jsx              # Mapa interativo (Leaflet)
+│
+│   ├── pages/
+│   │   ├── About.jsx                 # Tela "Sobre"
+│   │   ├── Home.jsx                  # Tela inicial / listagem de trilhas
+│   │   ├── MyTrails.jsx              # Tela "Minhas trilhas"
+│   │   ├── TrailMapPage.jsx          # Tela com o mapa completo da trilha
+│   │   └── TrailPage.jsx             # Detalhes completos da trilha
+│
+│   ├── services/
+│   │   ├── api.js                    # Wrapper de fetch:
+│   │   │                             #  - URL base via VITE_API_URL
+│   │   │                             #  - Token JWT automático (Authorization)
+│   │   │                             #  - Content-Type dinâmico (FormData)
+│   │   │                             #  - Tratamento global de erros
+│   │   │                             #  - Helpers: postJSON, postForm, putForm...
+│   │   ├── authService.js            # Comunicação com /auth
+│   │   ├── ibgeService.js            # Comunicação com serviços do ibge
+│   │   └── trailService.js           # Requisições relacionadas às trilhas
+│
+│   ├── utils/
+│   │   └── gpxUtils.js               # Funções auxiliares (ex.: converter GPX)
+│
+│   ├── App.jsx                       # Rotas principais + layout
+│   ├── index.css                     # Estilos globais
+│   └── main.jsx                      # Ponto de entrada do React
+│
+├── .gitignore                        # Arquivos ignorados no Git
+├── .prettierrc                       # Configuração Prettier
+├── eslint.config.js                  # Configuração ESLint
+├── index.html                        # Página raiz do Vite
+├── package.json                      # Dependências e scripts do front
+├── package-lock.json
+├── vite.config.js                    # Configuração do Vite
+└── README.md                         # Documentação do frontend
+
 ```
 
 ## 6.2 Módulos do Sistema
