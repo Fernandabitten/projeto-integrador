@@ -1,59 +1,56 @@
-# 🌄 Trilha Conectada – Aplicação para Trilheiros
+# 🌍 Trilha Conectada
 
-## 👥 Equipe
-- Fernanda  
-- Grazi  
-- Ricardo  
+Trilha Conectada é uma aplicação web fullstack para **compartilhamento, visualização e gestão de trilhas de aventura**. Usuários podem fazer upload de arquivos GPX, visualizar as estatísticas da trilha em um mapa interativo e interagir com a comunidade.
+
+O projeto foi construído utilizando a **MERN Stack** moderna (React + Node/Express + Prisma + Tailwind CSS), adotando o JavaScript em todo o seu ciclo de desenvolvimento.
+
+## 🚀 Tecnologias
+
+Este projeto é dividido em dois ambientes principais, construídos com a mesma linguagem:
+
+### Frontend
+| Tecnologia | Descrição |
+| :--- | :--- |
+| **React** | Biblioteca principal para construção da interface de usuário (SPA). |
+| **Tailwind CSS** | Framework utility-first para estilização rápida e responsiva. |
+| **Leaflet / leaflet-gpx** | Biblioteca para renderização do mapa interativo e visualização dos dados GPX. |
+| **React Router DOM** | Gerenciamento de rotas e navegação da aplicação. |
+
+### Backend
+| Tecnologia | Descrição |
+| :--- | :--- |
+| **Node.js + Express** | Ambiente de execução e framework minimalista para construção da API REST. |
+| **Prisma ORM** | ORM moderno para interação segura e tipada com o banco de dados. |
+| **Bcrypt** | Criptografia segura para o armazenamento de senhas. |
+| **JSON Web Tokens (JWT)** | Padrão *stateless* para autenticação de usuários. |
+| **GPX Utilities** | Módulo interno para parsear e extrair estatísticas de arquivos GPX. |
+
+## 📦 Estrutura do Repositório
+
+O repositório está organizado em três pastas principais:
+
+* **`frontend/`**: Contém todo o código da interface do usuário (React).
+* **`backend/`**: Contém o servidor da API (Node.js/Express) e a lógica de negócio central.
+* **`docs/`**: Contém a documentação, diagramas e designer do projeto.
+
+## ⚙️ Configuração e Instalação
+
+Para rodar o projeto localmente, siga estes passos:
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/Fernandabitten/projeto-integrador.git
+    cd trilha-conectada
+    ```
+
+2.  **Configurar o Backend e Banco de Dados:**
+    * Navegue até a pasta `backend/`.
+    * Crie um arquivo `.env` com as credenciais do seu banco de dados e as chaves secretas.
+    * Siga as instruções detalhadas no `backend/README.md`.
+    * [→ Siga as instruções detalhadas no `backend/README.md`](./backend/README.md)
+
+3.  **Configurar o Frontend:**
+    * Navegue até a pasta `frontend/`.
+    * [→ Siga as instruções detalhadas no `frontend/README.md`](./frontend/README.md)
 
 ---
-
-## 🎯 Tema do Projeto
-**Trilha Conectada**
-
-## 📘 Descrição Geral
-**Trilha Conectada** é uma plataforma voltada para pessoas que praticam trilhas, permitindo **registrar rotas e compartilhar experiências**.  
-O objetivo é conectar aventureiros e ajudar na descoberta de novos caminhos, com informações sobre **nível de dificuldade, distância, localização e fotos** das trilhas.
-
----
-
-## ⚙️ Funcionalidades Iniciais
-1. **Cadastrar usuário** (nome, e-mail, senha).  
-2. **Cadastrar trilhas** (nome, localização, distância, nível de dificuldade, descrição e fotos).  
-3. **Listar trilhas** (com filtros por cidade ou dificuldade).  
-4. **Upload de múltiplas fotos por trilha** (visualização em carrossel).  
-
-> *Futuras melhorias: mapa interativo.*
-
----
-
-## 🧩 Mapeamento Inicial das Camadas
-
-| Camada | Função |
-|--------|--------|
-| **Front-end (React.js)** | Formulários de cadastro e login, tela de listagem de trilhas, cadastro de trilha com upload múltiplo de fotos |
-| **Back-end (Express.js, Prisma)** | Endpoints de autenticação, CRUD de trilhas e gerenciamento de fotos |
-| **Banco de Dados (PostgreSQL)** | Tabelas de usuários, trilhas, fotos e consultas otimizadas por cidade e dificuldade
-
----
-
-## 🗺️ Esboço de Arquitetura (Fluxo Simplificado)
-
-```
-[Usuário]
-    ⬇️  
-[Front-end - React]
-• Formulários (cadastro/login)
-• Tela de listagem e cadastro de trilhas
-• Upload múltiplo de fotos
-• Envio de requisições HTTP (Axios/Fetch)
-    ⬇️ 
-[Back-end - Express]
-• Validação de dados
-• Regras de negócio
-• Upload e tratamento de imagens
-• ORM (Prisma)
-    ⬇️ 
-[Banco de Dados - PostgreSQL]
-• Persistência das informações (usuários, trilhas e fotos)
-• Consultas e filtragens
-```
