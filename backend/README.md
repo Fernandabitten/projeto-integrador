@@ -1,109 +1,61 @@
-# Backend - Projeto Integrador
+# ⚙️ Backend | Trilha Conectada API
 
-Este é o backend do Projeto Integrador, desenvolvido com **Node.js** e **Express**.
+O backend é uma **API REST** construída com **Node.js e Express** que gerencia os dados de usuários e trilhas. Ele é responsável pela autenticação, validação de dados, e pelo processamento de arquivos GPX e uploads de fotos.
 
-## Tecnologias
+## 🧱 Arquitetura e Módulos
 
-- [Node.js](https://nodejs.org/)
-- [Express](https://expressjs.com/)
-- [Nodemon](https://nodemon.io/)
-- [CORS](https://www.npmjs.com/package/cors)
+O servidor segue o padrão arquitetural **MVC** (Model-View-Controller) modificado:
 
----
+* **`server.js`**: Ponto de entrada da aplicação, onde os middlewares (`cors`, `express.json`) e as rotas são definidos.
+* **`routes/`**: Define as rotas (`/trails`, `/auth`) e mapeia as requisições para os controladores.
+* **`controllers/`**: Contém a lógica de negócio de alto nível (chamando os *cores*).
+* **`core/`**: Funções de **Lógica de Negócio Central** onde a validação e a manipulação de dados realmente ocorrem.
+* **`utils/`**: Módulos utilitários, como `httpResponses.js` (padronização de respostas) e `auth.js` (criptografia/JWT).
+* **`middlewares/`**: Funções executadas antes dos controladores (ex: `authMiddleware.js` para verificação de JWT).
 
-## Requisitos
+## 🛠️ Instalação e Execução
 
-- **Node.js** versão 18 ou superior  
-- **npm** (gerenciador de pacotes do Node)
+1.  **Instalar dependências:**
+    ```bash
+    npm install
+    ```
 
----
+2.  **Configurar Variáveis de Ambiente (`.env`):**
+    Crie um arquivo `.env` na raiz do backend e adicione as seguintes variáveis:
 
-## Instalação
+    ```env
+ 
+    # Porta de Execução da API
+    PORT=3000
 
-1. **Clone o repositório**
-   ```bash
-   git clone git clone https://github.com/Fernandabitten/projeto-integrador.git
-   cd projeto-integrador/backend
-   ```
+    # Configuração do Banco de Dados (SQLite com Prisma)
+    DATABASE_URL="file:./dev.db
 
-2. **Instale as dependências**
-   ```bash
-   npm install
-   ```
+    # Chave Secreta para Geração de JWT
+    JWT_SECRET="sua_chave_secreta_aqui" 
 
----
+    # Configuração do serviço de armazenamento (Supabase)
+    SUPABASE_URL="https://[seu_id].supabase.co"
+    SUPABASE_KEY="chave_de_servico_aqui"
+    SUPABASE_BUCKET="uploads"
+    ```
 
-## Execução
+3.  **Configurar o Banco de Dados (Prisma):**
+    Execute as migrações para criar as tabelas no seu banco de dados:
+    ```bash
+    npx prisma migrate dev --name init
+    ```
 
-### Ambiente de desenvolvimento
-Usa **Nodemon** para reiniciar o servidor automaticamente a cada mudança.
+4.  **Iniciar a API:**
+    ```bash
+    npm run dev 
+    # ou 'npm start' se for para produção
+    ```
+    A API estará disponível em `http://localhost:3000`.
+
+## 🧪 Testes
+
+Os testes são cruciais e focam nas operações de **Core Logic** (`*Core.js`). Para executá-los:
 
 ```bash
-npm run dev
-```
-
-### Ambiente de produção
-Executa o servidor normalmente com Node.js.
-
-```bash
-npm start
-```
-
----
-
-## Estrutura básica do projeto
-
-```
-backend/
-│
-├── src/
-│   ├── server.js                # Ponto de entrada do servidor Express
-│   │
-│   ├── routes/                  # Rotas da aplicação
-│   │   ├── userRoutes.js
-│   │   └── trailRoutes.js
-│   │
-│   ├── controllers/             # Controladores (lógica de negócio)
-│   │   ├── userController.js
-│   │   └── trailController.js
-│   │
-│   └── middlewares/             # Middlewares personalizados
-│       └── ogger.js
-│
-└── package.jsonS
-
-```
-
-## Middleware de Logger
-
-O servidor inclui um middleware simples que exibe o método e a URL de cada requisição:
-
-```javascript
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-```
-
----
-
-## CORS
-
-O CORS está habilitado para permitir requisições externas:
-```javascript
-app.use(cors());
-```
-
----
-
-## Teste rápido
-
-Após rodar `npm run dev`, acesse:
-```
-http://localhost:3000/
-```
-Você deve ver no terminal:
-
-```
-[LOG] GET /
-```
+npm run test
