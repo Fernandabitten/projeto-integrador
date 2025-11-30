@@ -25,6 +25,25 @@ Este projeto é dividido em dois ambientes principais, construídos com a mesma 
 | **JSON Web Tokens (JWT)** | Padrão *stateless* para autenticação de usuários. |
 | **GPX Utilities** | Módulo interno para parsear e extrair estatísticas de arquivos GPX. |
 
+## 🌐 Status do Projeto e Deploy
+
+A aplicação está dividida em dois serviços separados em produção (Frontend e Backend):
+
+| Serviço | Plataforma de Deploy | URL de Acesso |
+| :--- | :--- | :--- |
+| **Frontend** (Interface do Usuário) | **Vercel** | [https://projeto-integrador-lovat.vercel.app/login](https://projeto-integrador-lovat.vercel.app/login) |
+| **Backend** (API REST) | **Render** | [https://projeto-integrador-sqfa.onrender.com/](https://projeto-integrador-sqfa.onrender.com/) |
+
+## 🎨 Design e Protótipo (UX/UI)
+
+O design da interface do usuário (UI) e a experiência do usuário (UX) do Trilha Conectada foram desenvolvidos no **Figma**.
+
+O protótipo serve como referência visual completa para a implementação do frontend em React e como guia para futuras funcionalidades.
+
+* **Link do Protótipo no Figma:** [Acessar Protótipo (VIEW ONLY)](https://www.figma.com/design/n6hWPosDaxt1cKiuOyZ2aV/Sem-t%C3%ADtulo?node-id=2-39&p=f&t=6yJqPHAnosw746PI-0)
+
+---
+
 ## 📦 Estrutura do Repositório
 
 O repositório está organizado em três pastas principais:
@@ -54,3 +73,15 @@ Para rodar o projeto localmente, siga estes passos:
     * [→ Siga as instruções detalhadas no `frontend/README.md`](./frontend/README.md)
 
 ---
+
+## 📄 Documentação Completa do Sistema
+
+Todos os requisitos detalhados, especificações de arquitetura, decisões técnicas e escopo do projeto estão formalizados no **Documento de Especificações Técnicas (DET)**.
+
+É recomendável a leitura deste documento para entender o contexto completo do sistema, as regras de negócio e a justificativa para as escolhas de tecnologia.
+
+* **Localização do Documento:** [`docs/documentacao-final.md`](./docs/documentacao-final.md)
+  *(Ajuste o caminho se o arquivo estiver em outro local.)*
+
+---
+
