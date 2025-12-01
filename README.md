@@ -81,7 +81,17 @@ Todos os requisitos detalhados, especificações de arquitetura, decisões técn
 É recomendável a leitura deste documento para entender o contexto completo do sistema, as regras de negócio e a justificativa para as escolhas de tecnologia.
 
 * **Localização do Documento:** [`docs/documentacao-final.md`](./docs/documentacao-final.md)
-  *(Ajuste o caminho se o arquivo estiver em outro local.)*
+ ---
+
+## 📅 Gestão do Projeto (Trello)
+
+O acompanhamento de tarefas, *backlog*, planejamento de Sprints e status de desenvolvimento foram gerenciados através do Trello.
+
+O quadro serviu como referência para os próximos passos, funcionalidades pendentes e histórico de entregas.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1b03d6ce-b5cf-4cc9-8746-a5e46a433432" width="49%" />
+  <img src="https://github.com/user-attachments/assets/14f0c16d-80a7-4fdb-ba7f-b2d719598bc2" width="19%" />
+  <img src="https://github.com/user-attachments/assets/04d5f7ee-999a-42d7-8640-973250db3c44" width="19%" />
+</p>
 
 ---
-
