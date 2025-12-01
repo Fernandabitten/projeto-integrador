@@ -23,24 +23,24 @@ export default function AvatarMenu({ handleLogout }) {
           role="menu"
         >
           {/* Item: Editar Perfil */}
-          <button
+          {/* <button
             className="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100"
             onClick={() => alert('Editar Perfil')}
             role="menuitem"
           >
             <User className="w-4 h-4 mr-2" />
             Editar Perfil
-          </button>
+          </button> */}
 
           {/* Item: Tema */}
-          <button
+          {/* <button
             className="flex items-center w-full px-4 py-2 text-sm hover:bg-gray-100"
             onClick={() => alert('Alternar tema')}
             role="menuitem"
           >
             <SunMoon className="w-4 h-4 mr-2" />
             Tema
-          </button>
+          </button> */}
 
           {/* Item: Logout */}
           <button

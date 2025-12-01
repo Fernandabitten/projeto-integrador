@@ -1,5 +1,3 @@
-// src/utils/geoUtils.js
-
 /**
  * Converte graus para radianos.
  * @param {number} deg - Ângulo em graus.

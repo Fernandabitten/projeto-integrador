@@ -47,7 +47,7 @@ export async function postJSON(url, body) {
 export async function postForm(url, formData) {
   return request(url, {
     method: 'POST',
-    body: formData, // headers deliberately left to fetch
+    body: formData,
   });
 }
 
