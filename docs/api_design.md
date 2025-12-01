@@ -37,6 +37,157 @@ A API contará com os seguintes recursos principais:
 
 ---
 
+## 3. Exemplos de Request e Response (JSON)
+### **POST /auth/register**
+**Request**
+```json
+{
+  "nome": "Maria Silva",
+  "email": "maria@example.com",
+  "senha": "123456"
+}
+```
+**Response (201 Created)**
+```json
+{
+  "id": 1,
+  "nome": "Maria Silva",
+  "email": "maria@example.com"
+}
+```
+---
+### **POST /auth/login**
+**Request**
+```json
+{
+  "email": "maria@example.com",
+  "senha": "123456"
+}
+```
+**Response (200 OK)**
+```json
+{
+  "token": "jwt_token_exemplo",
+  "usuarioId": 1
+}
+```
+---
+### **GET /usuarios**
+**Response (200 OK)**
+```json
+[
+  {
+    "id": 1,
+    "nome": "Maria Silva",
+    "email": "maria@example.com"
+  }
+]
+```
+---
+### **GET /usuarios/{id}**
+**Response (200 OK)**
+```json
+{
+  "id": 1,
+  "nome": "Maria Silva",
+  "email": "maria@example.com"
+}
+```
+---
+### **POST /trails**
+**Request**
+```json
+{
+  "titulo": "Trilha de HTML",
+  "descricao": "Aprenda HTML do básico ao avançado"
+}
+```
+**Response (201 Created)**
+```json
+{
+  "id": 10,
+  "titulo": "Trilha de HTML",
+  "descricao": "Aprenda HTML do básico ao avançado"
+}
+```
+---
+### **GET /trails**
+**Response (200 OK)**
+```json
+[
+  {
+    "id": 10,
+    "titulo": "Trilha de HTML",
+    "descricao": "Aprenda HTML do básico ao avançado"
+  }
+]
+```
+---
+### **POST /activities**
+**Request**
+```json
+{
+  "trailId": 10,
+  "titulo": "Introdução ao HTML",
+  "conteudo": "Tags básicas e estrutura inicial"
+}
+```
+**Response (201 Created)**
+```json
+{
+  "id": 50,
+  "trailId": 10,
+  "titulo": "Introdução ao HTML",
+  "conteudo": "Tags básicas e estrutura inicial"
+}
+```
+---
+### **GET /activities?trailId=10**
+**Response (200 OK)**
+```json
+[
+  {
+    "id": 50,
+    "trailId": 10,
+    "titulo": "Introdução ao HTML",
+    "conteudo": "Tags básicas e estrutura inicial"
+  }
+]
+```
+---
+### **POST /progress**
+**Request**
+```json
+{
+  "usuarioId": 1,
+  "activityId": 50,
+  "status": "concluido"
+}
+```
+**Response (201 Created)**
+```json
+{
+  "id": 300,
+  "usuarioId": 1,
+  "activityId": 50,
+  "status": "concluido"
+}
+```
+---
+### **GET /progress/{userId}**
+**Response (200 OK)**
+```json
+[
+  {
+    "id": 300,
+    "usuarioId": 1,
+    "activityId": 50,
+    "status": "concluido"
+  }
+]
+```
+---
+
 ## 4. Status Codes previstos por rota
 
 | Rota                     | Sucesso        | Erros possíveis                                                                                                             |
