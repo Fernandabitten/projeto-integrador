@@ -12,7 +12,9 @@ O objetivo deste arquivo é servir como um **índice central** para facilitar a 
 | :--------------- | :------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | **Geral**        | **[Documentação Final](./documentacao-final.md)**  | Documento que reúne a visão geral do sistema, arquitetura, metodologia aplicada e resumo de todos os artefatos.                     |
 | **Requisitos**   | **[requisitos.md](./requisitos.md)**               | Lista completa dos Requisitos Funcionais (RF) e Não Funcionais (RNF) do sistema.                                                    |
-| **Arquitetura**  | **[diagramas.md](./diagramas.md)**                 | Diagramas de Casos de Uso, Modelo de Dados (Classes) e Sequência referentes ao fluxo de criação de trilhas.                         |
+| **Arquitetura**  | **[Diagramas de Casos de Uso](./diagramas/casos-uso.md)**    | Diagramas de Casos de Uso.  
+| **Arquitetura**  | **[Diagrama de classe](./diagramas/classes.md)**             | Modelo de Dados (Classes)   
+| **Arquitetura**  | **[Diagrama de sequência](./diagramas/sequencia.md)**        | Sequência referentes ao fluxo de criação de trilhas.  
 | **API**          | **[api_design.md](./api_design.md)**               | Especificação das rotas da API REST, incluindo endpoints, métodos, estruturas de entrada e saída, além dos status codes utilizados. |
 | **Planejamento** | **[sprints.md](./sprints.md)**                     | Registro das sprints, com tarefas planejadas, responsáveis, andamento e entregas.                                                   |
 | **Planejamento** | **[estimativas.md](./estimativas.md)**             | Estimativas de esforço (Story Points) atribuídas às tarefas do backlog.                                                             |
