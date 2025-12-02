@@ -7,7 +7,7 @@ O frontend é uma **Single Page Application (SPA)** construída com **React** e 
 * **Componentização:** Interface totalmente modular, facilitando a reutilização de elementos.
 * **Estilização:** Utiliza **Tailwind CSS** para um fluxo de desenvolvimento *utility-first* e rápido.
 * **Visualização de Mapas:** Integração com **Leaflet** e **leaflet-gpx** para renderizar os dados geoespaciais.
-* **Gráficos:** Utiliza **ApexCharts** para visualização de estatísticas da trilha (elevação, velocidade, etc.).
+* **Gráficos:** Utiliza **ApexCharts** para visualização de estatísticas da trilha (elevação, etc.).
 
 ## 🛠️ Instalação e Execução
 
@@ -26,7 +26,7 @@ O frontend é uma **Single Page Application (SPA)** construída com **React** e 
 
     ```env
     # URL da API do Backend
-    VITE_API_URL=http://localhost:3000
+    VITE_API_URL=https://minha-api.com
     ```
 
 4.  **Iniciar a Aplicação (Desenvolvimento):**
