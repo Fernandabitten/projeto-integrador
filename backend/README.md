@@ -29,7 +29,8 @@ O servidor segue o padrão arquitetural **MVC** (Model-View-Controller) modifica
     PORT=3000
 
     # Configuração do Banco de Dados (SQLite com Prisma)
-    DATABASE_URL="file:./dev.db
+    DATABASE_URL="postgresql://meuUsuario:minhaSenha@localhost:5432/meuBanco?schema=public"
+
 
     # Chave Secreta para Geração de JWT
     JWT_SECRET="sua_chave_secreta_aqui" 
